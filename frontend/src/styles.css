@@ -270,10 +270,12 @@
     left: 50%;
     top: 50%;
     z-index: 5;
-    width: 230px;
-    min-height: 106px;
-    padding: 15px 17px 15px 65px;
-    display: flex;
+    width: 244px;
+    min-height: 112px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    column-gap: 17px;
     align-items: center;
     border: 1px solid color-mix(in srgb, var(--mint) 34%, transparent);
     border-radius: 14px 36px 36px 14px;
@@ -283,11 +285,12 @@
     transform: translate(-48%, -43%);
   }
   .level-vessel {
-    position: absolute;
-    left: 16px;
-    top: 12px;
-    width: 35px;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 38px;
     height: 80px;
+    align-self: center;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--paper) 36%, transparent);
     border-radius: 6px 6px 17px 17px;
@@ -299,10 +302,10 @@
   .vessel-fill i:last-child { top: -3px; opacity: .38; animation-delay: -.8s; }
   .level-tick { position: absolute; right: 3px; z-index: 3; width: 6px; height: 1px; background: rgba(255,255,255,.5); }
   .tick-a { top: 18px; } .tick-b { top: 38px; } .tick-c { top: 58px; }
-  .readout-copy { display: flex; flex-direction: column; }
-  .readout-copy small { color: var(--muted); font-family: var(--mono); font-size: 6px; letter-spacing: .11em; }
-  .readout-copy strong { margin: 2px 0 4px; font-family: var(--display); font-size: 34px; font-weight: 450; line-height: 1; letter-spacing: -.04em; }
-  .readout-copy sup { color: var(--muted); font-size: .4em; }
+  .readout-copy { min-width: 0; display: flex; flex-direction: column; justify-content: center; align-self: center; }
+  .readout-copy small { margin-bottom: 6px; color: var(--muted); font-family: var(--mono); font-size: 6px; line-height: 1; letter-spacing: .11em; white-space: nowrap; }
+  .readout-copy strong { margin: 0 0 8px; display: flex; align-items: flex-start; font-family: var(--display); font-size: 34px; font-weight: 450; line-height: .82; letter-spacing: -.04em; white-space: nowrap; }
+  .readout-copy sup { margin: 2px 0 0 2px; color: var(--muted); font-size: .4em; line-height: 1; letter-spacing: 0; }
   .readout-copy > span { display: flex; align-items: center; gap: 6px; color: var(--muted); font-family: var(--mono); font-size: 6px; text-transform: uppercase; }
   .readout-copy .status-dot { width: 5px; height: 5px; flex-basis: 5px; }
   .droplet { position: absolute; z-index: 7; width: 11px; height: 15px; border-radius: 62% 38% 65% 35% / 76% 34% 66% 24%; background: linear-gradient(145deg, var(--mint), var(--river)); box-shadow: 0 0 18px color-mix(in srgb, var(--cyan) 45%, transparent); transform: rotate(42deg); animation: dropletFloat 4s ease-in-out infinite; }
@@ -617,16 +620,18 @@
     .water-readout {
       left: 50%;
       top: 49%;
-      width: min(216px, 62vw);
-      min-height: 94px;
-      padding: 13px 13px 13px 62px;
+      width: min(230px, 66vw);
+      min-height: 98px;
+      padding: 13px 16px;
+      grid-template-columns: 34px minmax(0, 1fr);
+      column-gap: 13px;
       border-radius: 16px 30px 30px 16px;
       transform: translate(-50%, -45%);
     }
-    .level-vessel { left: 13px; top: 11px; width: 34px; height: 70px; }
+    .level-vessel { width: 34px; height: 70px; }
     .readout-copy { min-width: 0; }
-    .readout-copy small { font-size: 6.5px; letter-spacing: .07em; white-space: nowrap; }
-    .readout-copy strong { margin-top: 4px; font-size: 30px; }
+    .readout-copy small { margin-bottom: 6px; font-size: 6.5px; letter-spacing: .07em; }
+    .readout-copy strong { margin: 0 0 7px; font-size: 30px; }
     .readout-copy > span { gap: 5px; font-size: 5.5px; letter-spacing: -.01em; white-space: nowrap; }
     .droplet-b { right: 9%; }
     .droplet-c { right: 13%; bottom: 11%; }
