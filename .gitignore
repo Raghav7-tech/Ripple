@@ -1,0 +1,47 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node and frontend
+node_modules/
+dist/
+build/
+.next/
+.vite/
+coverage/
+
+# AWS and infrastructure
+.aws-sam/
+cdk.out/
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# IDE and operating system
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Generated documents and local QA
+*.pdf
+docs/.rendered/
+.tmp/
+tmp/
+
+# Local data; committed samples belong in data/samples
+data/raw/
+data/private/
