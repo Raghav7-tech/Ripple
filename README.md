@@ -12,7 +12,7 @@ Ripple converts a flood or river-level trigger into an explainable chain of like
 Ripple is being designed for the **Heat and Water** track of [Environmental Hacks](https://www.wemakedevs.org/aws/env), part of the Bharat Builds Tour.
 
 > [!IMPORTANT]
-> This repository now includes an interactive frontend prototype with a controlled Yamuna replay, dependency graph, explainable impact trace, and bilingual advisory. The backend, live data integration, AWS infrastructure, and deployed end-to-end flow are still planned. Track verified progress in [PROJECT_STATUS.md](PROJECT_STATUS.md).
+> This repository includes an interactive frontend, deterministic cascade engine, validated replay and graph contracts, bilingual advisory fallback, explainable shortage-risk baseline, Lambda handlers, tests, and AWS SAM infrastructure. The AWS stack and live data feed are not yet deployed or operationally verified. Track evidence in [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## The problem
 
@@ -42,7 +42,7 @@ The demo should show:
 4. A bilingual advisory with a deterministic fallback.
 5. A **Why this alert?** view showing the full causal path and assumptions.
 
-## Planned AWS architecture
+## AWS architecture
 
 ```mermaid
 flowchart LR
@@ -67,11 +67,12 @@ Bedrock is not part of the risk calculation. The cascade engine deterministicall
 
 ```text
 .
-├── backend/                 Planned ingestion and cascade services
-├── data/                    Data contracts, samples, and provenance rules
+├── backend/                 Deterministic domain core and Lambda handlers
+├── data/                    JSON Schemas, replay fixtures, graph, and provenance
 ├── docs/                    Detailed product and engineering documentation
 ├── frontend/                Interactive operator and public advisory prototype
-├── infrastructure/          Planned AWS SAM or CDK deployment
+├── infrastructure/          AWS SAM deployment definition
+├── ml/                      Shortage prediction model card and evaluation gates
 ├── CONTRIBUTING.md
 ├── PROJECT_STATUS.md
 ├── SECURITY.md
@@ -103,6 +104,23 @@ Open the local URL shown by Vite. For a production check:
 ```bash
 pnpm build
 ```
+
+The deployed frontend is available at [ripple-topaz.vercel.app](https://ripple-topaz.vercel.app/). It remains in labelled local-replay mode until `VITE_API_BASE_URL` is configured with a deployed AWS API.
+
+## Run the deterministic backend
+
+Python 3.14 is used by the SAM template. The core has no third-party runtime dependency.
+
+```bash
+python -m unittest discover -s backend/tests -t backend -v
+python -m backend.ripple.replay data/samples/yamuna-2023-replay.json data/samples/delhi-water-demo-graph.json
+```
+
+The replay regression produces three explainable facility impacts at 38, 72, and 125 minutes. All route delays and confidence weights are explicitly marked as demonstration assumptions.
+
+## Shortage prediction
+
+Ripple now has a `ShortagePredictor` interface and an explainable pre-ML baseline using reserve hours, supply, demand, river rise, upstream disruption probability, criticality, and prediction horizon. It makes UI/API integration testable today, but returns `productionReady: false` because no real labelled facility dataset has been supplied. The training target, leakage controls, event-based split, calibration checks, and safety gates are documented in [ml/MODEL_CARD.md](ml/MODEL_CARD.md).
 
 ### Implemented frontend experience
 

@@ -110,6 +110,27 @@ Response:
 
 The server must reject approval when the run is stale, incomplete, mismatched, or already superseded.
 
+## Shortage forecast
+
+`POST /forecasts/shortage`
+
+```json
+{
+  "features": {
+    "facilityId": "hospital-north-01",
+    "reserveHours": 18,
+    "expectedSupplyM3h": 42,
+    "expectedDemandM3h": 70,
+    "riverRiseMPerHour": 0.31,
+    "upstreamDisruptionProbability": 0.84,
+    "criticality": 1,
+    "horizonHours": 48
+  }
+}
+```
+
+The current response uses `explainable-baseline-v1` and includes `productionReady: false`. A future trained model must implement this same contract and pass the evaluation gates in [`ml/MODEL_CARD.md`](../ml/MODEL_CARD.md).
+
 ## Errors
 
 ```json

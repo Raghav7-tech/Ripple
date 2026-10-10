@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0",
+  "sources": [
+    {
+      "sourceId": "ripple-demo-yamuna",
+      "label": "Ripple synthetic replay fixture",
+      "publisher": "Ripple contributors",
+      "evidenceStatus": "demonstration",
+      "operationalUseAllowed": false,
+      "notes": "Values, dependency delays, facilities, and confidence weights are explicitly synthetic. Replace this source with a reviewed government or utility feed before any field pilot."
+    }
+  ]
+}

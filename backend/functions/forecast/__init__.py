@@ -1,0 +1,1 @@
+"""Shortage forecasting Lambda."""

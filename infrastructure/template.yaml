@@ -1,0 +1,244 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Ripple disaster cascade intelligence MVP
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: demo
+    AllowedPattern: '^[a-z0-9-]+$'
+  EnableAlertDelivery:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+
+Globals:
+  Function:
+    Runtime: python3.14
+    Architectures: [arm64]
+    Timeout: 20
+    MemorySize: 256
+    Tracing: Active
+    Environment:
+      Variables:
+        APP_VERSION: '0.2.0'
+        APP_MODE: replay
+        TABLE_NAME: !Ref RippleTable
+        REPLAY_BUCKET: !Ref ReplayBucket
+        POWERTOOLS_SERVICE_NAME: ripple
+    LoggingConfig:
+      LogFormat: JSON
+      ApplicationLogLevel: INFO
+      SystemLogLevel: INFO
+  HttpApi:
+    CorsConfiguration:
+      AllowOrigins: ['*']
+      AllowMethods: [GET, POST, OPTIONS]
+      AllowHeaders: [content-type, authorization, x-correlation-id]
+
+Resources:
+  RippleApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref EnvironmentName
+      Auth:
+        Authorizers:
+          RippleJwtAuthorizer:
+            IdentitySource: '$request.header.Authorization'
+            JwtConfiguration:
+              Audience:
+                - !Ref OperatorUserPoolClient
+              Issuer: !Sub 'https://cognito-idp.${AWS::Region}.${AWS::URLSuffix}/${OperatorUserPool}'
+
+  OperatorUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub 'ripple-${EnvironmentName}-operators'
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+
+  OperatorUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref OperatorUserPool
+      GenerateSecret: false
+      PreventUserExistenceErrors: ENABLED
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_SRP_AUTH
+
+  ReplayBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+
+  RippleTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+  ReplayDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      KmsMasterKeyId: alias/aws/sqs
+      MessageRetentionPeriod: 1209600
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      KmsMasterKeyId: alias/aws/sns
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.api.app.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref RippleTable
+      Events:
+        Health:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /health
+            Method: GET
+        Run:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /runs/{runId}
+            Method: GET
+        Impact:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /impacts/{impactId}/explanation
+            Method: GET
+
+  ReplayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.replay.app.handler
+      Timeout: 60
+      MemorySize: 512
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref ReplayBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref RippleTable
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt ReplayDeadLetterQueue.Arn
+      Events:
+        StartReplay:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /admin/replays/{eventId}/start
+            Method: POST
+            Auth:
+              Authorizer: RippleJwtAuthorizer
+        ScheduledIngestionPlaceholder:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: rate(1 hour)
+            State: DISABLED
+            Description: Disabled until an authorised live observation source is configured
+            DeadLetterConfig:
+              Type: SQS
+              QueueLogicalId: ReplayDeadLetterQueue
+
+  CascadeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.cascade.app.handler
+
+  AdvisoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.advisory.app.handler
+
+  ForecastFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.forecast.app.handler
+      Events:
+        ShortageForecast:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /forecasts/shortage
+            Method: POST
+
+  AlertFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend
+      Handler: functions.alert.app.handler
+      Environment:
+        Variables:
+          ALERT_TOPIC_ARN: !Ref AlertTopic
+          ENABLE_ALERT_DELIVERY: !Ref EnableAlertDelivery
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt AlertTopic.TopicName
+      Events:
+        ApproveAlert:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /admin/alerts/{impactId}/approve
+            Method: POST
+            Auth:
+              Authorizer: RippleJwtAuthorizer
+
+Outputs:
+  ApiUrl:
+    Description: Ripple HTTP API base URL
+    Value: !Sub 'https://${RippleApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${EnvironmentName}'
+  ReplayBucketName:
+    Value: !Ref ReplayBucket
+  TableName:
+    Value: !Ref RippleTable
+  AlertTopicArn:
+    Value: !Ref AlertTopic
+  OperatorUserPoolId:
+    Value: !Ref OperatorUserPool
+  OperatorUserPoolClientId:
+    Value: !Ref OperatorUserPoolClient

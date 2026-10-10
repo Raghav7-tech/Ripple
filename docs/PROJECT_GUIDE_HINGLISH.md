@@ -10,7 +10,7 @@ Hackathon MVP ka target ek real historical Yamuna flood event ko replay karke ek
 
 ## 2 Project status
 
-Repository abhi documentation-first state mein hai. Architecture, contracts, demo flow aur safety boundaries defined hain, lekin backend, frontend, tests aur AWS deployment abhi repository mein implemented nahi hain. `PROJECT_STATUS.md` hi verified status ka source of truth hai.
+Repository ab documentation-only state mein nahi hai. Interactive frontend, deterministic cascade engine, JSON validators, fixed replay, bilingual fallback, shortage-risk baseline, Lambda handlers, 16 backend tests aur AWS SAM template implement ho chuke hain. Frontend publicly deployed hai, lekin AWS backend deployment, authorised live data, verified SNS delivery aur trained ML model abhi remaining hain. `PROJECT_STATUS.md` verified status ka source of truth hai.
 
 ## 3 Problem statement
 
@@ -428,6 +428,21 @@ Minimum five first-time users se test karo:
 
 ## 22 Observability
 
+### Shortage prediction layer
+
+Cascade engine batata hai ki upstream disruption facility tak kis path aur delay se pahunch sakta hai. Shortage predictor ek alag question answer karta hai: available reserve, expected supply-demand gap, river trend aur upstream disruption probability ko dekhkar chosen horizon ke andar actual shortage ka risk kya hai.
+
+Current `explainable-baseline-v1` trained ML model nahi hai. Iska kaam feature/API contract, UI aur safety behavior ko testable banana hai; response hamesha `productionReady: false` return karta hai. Real model tabhi production-ready mark hoga jab:
+
+- reviewed facility telemetry aur verified shortage labels available hon;
+- train/test split random rows ki jagah event aur time ke basis par ho;
+- hospital aur shelter false-negative rate separately measure ho;
+- probability calibration aur warning lead time pass ho;
+- har prediction ke saath model version, feature timestamp aur top factors store hon;
+- operator-agreed threshold aur human approval workflow active ho.
+
+Detailed model card `ml/MODEL_CARD.md` mein hai.
+
 Every run mein common `correlationId` hona chahiye. Log events:
 
 - Observation received or replayed
@@ -542,7 +557,7 @@ What-if mitigation simulator: tanker capacity, plant partial operation, hospital
 
 ### Phase 3 Better forecasting
 
-CWC forecast or authorised feed integration, forecast-triggered cascade, calibration and uncertainty evaluation.
+CWC forecast or authorised feed integration, reviewed facility telemetry, trained shortage classifier/time-to-event model, event-separated backtesting, probability calibration, forecast-triggered cascade aur uncertainty evaluation.
 
 ### Phase 4 Multi-hazard expansion
 

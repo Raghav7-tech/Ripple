@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { impacts, levelPoints, scenarioSteps, type Severity } from './data/scenario'
+import { apiConfigured, getHealth, predictShortage, type ShortageForecast } from './lib/api'
 
 const severityLabel: Record<Severity, string> = {
   stable: 'Stable',
@@ -257,12 +258,40 @@ function App() {
   const [step, setStep] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [selectedImpact, setSelectedImpact] = useState(impacts[0].id)
+  const [backendStatus, setBackendStatus] = useState<'demo' | 'checking' | 'connected' | 'fallback'>(apiConfigured ? 'checking' : 'demo')
+  const [liveForecast, setLiveForecast] = useState<ShortageForecast | null>(null)
   const current = scenarioSteps[step]
   const selected = impacts.find((impact) => impact.id === selectedImpact) ?? impacts[0]
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+
+  useEffect(() => {
+    if (!apiConfigured) return
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 4000)
+    getHealth(controller.signal)
+      .then(() => setBackendStatus('connected'))
+      .catch(() => setBackendStatus('fallback'))
+      .finally(() => window.clearTimeout(timeout))
+    return () => {
+      window.clearTimeout(timeout)
+      controller.abort()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (backendStatus !== 'connected') {
+      setLiveForecast(null)
+      return
+    }
+    const controller = new AbortController()
+    predictShortage(selected.forecastFeatures, controller.signal)
+      .then(setLiveForecast)
+      .catch(() => setLiveForecast(null))
+    return () => controller.abort()
+  }, [backendStatus, selected])
 
   useEffect(() => {
     if (!playing) return
@@ -310,7 +339,11 @@ function App() {
         <section className="hero" id="top">
           <div className="hero-grid-overlay" />
           <div className="hero-copy">
-            <div className="eyebrow"><StatusDot severity="watch" /> YAMUNA REPLAY · SYSTEM ARMED</div>
+            <div className="eyebrow"><StatusDot severity={backendStatus === 'fallback' ? 'warning' : 'watch'} /> {
+              backendStatus === 'connected' ? 'AWS API CONNECTED' :
+                backendStatus === 'checking' ? 'CHECKING AWS API' :
+                  backendStatus === 'fallback' ? 'LOCAL REPLAY · API FALLBACK' : 'YAMUNA REPLAY · SYSTEM ARMED'
+            }</div>
             <h1>See the shortage<br /><em>before it arrives.</em></h1>
             <p className="hero-lede">Ripple turns a river warning into a traceable chain of downstream consequences—so hospitals, water teams, and public services get time to act.</p>
             <div className="hero-actions">
@@ -419,6 +452,18 @@ function App() {
               </div>
               <h3>{selected.name}</h3>
               <p className="explain-summary">Potential supply interruption in <b>{selected.eta}</b>. This is an inferred operational impact, not a flood prediction for the facility itself.</p>
+              <div className="shortage-forecast" aria-label="Shortage prediction baseline">
+                <div>
+                  <small>SHORTAGE PROBABILITY</small>
+                  <strong>{liveForecast ? Math.round(liveForecast.shortageProbability * 100) : selected.shortageProbability}<sup>%</sup></strong>
+                  <span>{liveForecast ? `${liveForecast.horizonHours} hr horizon` : selected.shortageHorizon}</span>
+                </div>
+                <div>
+                  <small>TOP SIGNALS</small>
+                  <p>{(liveForecast?.topFactors ?? selected.forecastFactors).join(' · ')}</p>
+                  <span>{liveForecast?.modelVersion ?? 'EXPLAINABLE BASELINE'} · NOT PRODUCTION READY</span>
+                </div>
+              </div>
               <ol className="causal-path">
                 {selected.path.map((node, index) => (
                   <li key={node}><span>{String(index + 1).padStart(2, '0')}</span><b>{node}</b>{index < selected.path.length - 1 && <i />}</li>

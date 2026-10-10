@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ripple.dev/schemas/impact-result.schema.json",
+  "title": "Ripple Impact Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "impactId",
+    "runId",
+    "target",
+    "expectedImpactAt",
+    "etaMinutes",
+    "severity",
+    "confidence",
+    "path",
+    "assumptions",
+    "actionCode"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "impactId": { "type": "string", "minLength": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "name"],
+      "properties": {
+        "nodeId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "expectedImpactAt": { "type": "string", "format": "date-time" },
+    "etaMinutes": { "type": "integer", "minimum": 0 },
+    "severity": { "enum": ["stable", "watch", "warning", "critical"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "path": { "type": "array", "minItems": 1, "items": { "type": "object" } },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "actionCode": { "type": "string", "minLength": 1 }
+  }
+}

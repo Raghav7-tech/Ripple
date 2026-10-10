@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ripple.dev/schemas/observation.schema.json",
+  "title": "Ripple Observation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "observationId",
+    "eventId",
+    "sourceNodeId",
+    "observedAt",
+    "receivedAt",
+    "levelM",
+    "confidence",
+    "mode",
+    "sourceId"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "observationId": { "type": "string", "minLength": 1 },
+    "eventId": { "type": "string", "minLength": 1 },
+    "sourceNodeId": { "type": "string", "minLength": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "receivedAt": { "type": "string", "format": "date-time" },
+    "levelM": { "type": "number" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "mode": { "enum": ["replay", "live"] },
+    "sourceId": { "type": "string", "minLength": 1 }
+  }
+}

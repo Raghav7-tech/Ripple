@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0",
+  "graphVersion": "delhi-water-demo-v1",
+  "createdAt": "2026-10-10T09:00:00+05:30",
+  "approvedAt": null,
+  "thresholdsM": {
+    "watch": 204.5,
+    "warning": 205.33,
+    "critical": 206.0
+  },
+  "nodes": [
+    {
+      "nodeId": "gauge-yamuna-01",
+      "name": "Yamuna Gauge 01",
+      "type": "gauge",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Synthetic gauge identity used only for the Ripple demonstration replay."
+    },
+    {
+      "nodeId": "wtp-wazirabad",
+      "name": "Wazirabad Water Treatment Plant",
+      "type": "treatment-plant",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative dependency node; not an operational DJB asset record."
+    },
+    {
+      "nodeId": "wtp-chandrawal",
+      "name": "Chandrawal Water Treatment Plant",
+      "type": "treatment-plant",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative dependency node; not an operational DJB asset record."
+    },
+    {
+      "nodeId": "zone-north",
+      "name": "North Delhi Supply Zone",
+      "type": "supply-zone",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Synthetic service zone used to explain cascade traversal."
+    },
+    {
+      "nodeId": "zone-central",
+      "name": "Central Delhi Supply Zone",
+      "type": "supply-zone",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Synthetic service zone used to explain cascade traversal."
+    },
+    {
+      "nodeId": "hospital-north-01",
+      "name": "North District Hospital",
+      "type": "hospital",
+      "notify": true,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional facility name and response profile for demonstration only."
+    },
+    {
+      "nodeId": "clinic-civil-lines-01",
+      "name": "Civil Lines Clinic",
+      "type": "clinic",
+      "notify": true,
+      "severityCap": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional facility name and response profile for demonstration only."
+    },
+    {
+      "nodeId": "shelter-kashmere-gate-04",
+      "name": "Kashmere Gate Shelter",
+      "type": "shelter",
+      "notify": true,
+      "severityCap": "watch",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional facility name and response profile for demonstration only."
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "e-gauge-wazirabad",
+      "from": "gauge-yamuna-01",
+      "to": "wtp-wazirabad",
+      "delayMinutes": 8,
+      "confidence": 0.98,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative eight-minute signal-to-intake delay."
+    },
+    {
+      "edgeId": "e-wazirabad-north",
+      "from": "wtp-wazirabad",
+      "to": "zone-north",
+      "delayMinutes": 18,
+      "confidence": 0.95,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative treatment-to-zone propagation delay."
+    },
+    {
+      "edgeId": "e-north-hospital",
+      "from": "zone-north",
+      "to": "hospital-north-01",
+      "delayMinutes": 12,
+      "confidence": 0.94,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative distribution delay to the hospital."
+    },
+    {
+      "edgeId": "e-gauge-chandrawal",
+      "from": "gauge-yamuna-01",
+      "to": "wtp-chandrawal",
+      "delayMinutes": 14,
+      "confidence": 0.96,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative fourteen-minute signal-to-intake delay."
+    },
+    {
+      "edgeId": "e-chandrawal-central",
+      "from": "wtp-chandrawal",
+      "to": "zone-central",
+      "delayMinutes": 34,
+      "confidence": 0.92,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative treatment-to-zone propagation delay."
+    },
+    {
+      "edgeId": "e-central-clinic",
+      "from": "zone-central",
+      "to": "clinic-civil-lines-01",
+      "delayMinutes": 24,
+      "confidence": 0.92,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative distribution delay to the clinic."
+    },
+    {
+      "edgeId": "e-north-shelter",
+      "from": "zone-north",
+      "to": "shelter-kashmere-gate-04",
+      "delayMinutes": 99,
+      "confidence": 0.85,
+      "minSeverity": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Illustrative delayed supply impact at the shelter."
+    }
+  ]
+}

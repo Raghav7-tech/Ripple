@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ripple.dev/schemas/dependency-graph.schema.json",
+  "title": "Ripple Dependency Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "graphVersion", "createdAt", "thresholdsM", "nodes", "edges"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "graphVersion": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "approvedAt": { "type": ["string", "null"], "format": "date-time" },
+    "thresholdsM": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["watch", "warning", "critical"],
+      "properties": {
+        "watch": { "type": "number" },
+        "warning": { "type": "number" },
+        "critical": { "type": "number" }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nodeId", "name", "type", "notify", "severityCap", "evidenceStatus"],
+        "properties": {
+          "nodeId": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "notify": { "type": "boolean" },
+          "severityCap": { "$ref": "#/$defs/severity" },
+          "evidenceStatus": { "$ref": "#/$defs/evidenceStatus" },
+          "assumption": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["edgeId", "from", "to", "delayMinutes", "confidence", "minSeverity", "evidenceStatus"],
+        "properties": {
+          "edgeId": { "type": "string", "minLength": 1 },
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 },
+          "delayMinutes": { "type": "integer", "minimum": 0, "maximum": 10080 },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "minSeverity": { "$ref": "#/$defs/severity" },
+          "evidenceStatus": { "$ref": "#/$defs/evidenceStatus" },
+          "assumption": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "severity": { "enum": ["stable", "watch", "warning", "critical"] },
+    "evidenceStatus": { "enum": ["verified", "inferred", "demonstration"] }
+  }
+}

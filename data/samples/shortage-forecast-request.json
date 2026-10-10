@@ -1,0 +1,10 @@
+{
+  "facilityId": "hospital-north-01",
+  "reserveHours": 18,
+  "expectedSupplyM3h": 42,
+  "expectedDemandM3h": 70,
+  "riverRiseMPerHour": 0.31,
+  "upstreamDisruptionProbability": 0.84,
+  "criticality": 1.0,
+  "horizonHours": 48
+}

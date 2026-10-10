@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0",
+  "eventId": "yamuna-2023-demo",
+  "name": "Yamuna flood cascade demonstration",
+  "description": "Synthetic observations shaped for a deterministic Ripple walkthrough. These values are not an official hydrology record and must not be used operationally.",
+  "source": {
+    "sourceId": "ripple-demo-yamuna",
+    "label": "Ripple synthetic replay fixture",
+    "evidenceStatus": "demonstration",
+    "license": "Repository demonstration data"
+  },
+  "observations": [
+    {
+      "schemaVersion": "1.0",
+      "observationId": "yamuna-demo-001",
+      "eventId": "yamuna-2023-demo",
+      "sourceNodeId": "gauge-yamuna-01",
+      "observedAt": "2023-07-13T05:00:00+05:30",
+      "receivedAt": "2023-07-13T05:01:00+05:30",
+      "levelM": 204.1,
+      "confidence": 0.98,
+      "mode": "replay",
+      "sourceId": "ripple-demo-yamuna"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "yamuna-demo-002",
+      "eventId": "yamuna-2023-demo",
+      "sourceNodeId": "gauge-yamuna-01",
+      "observedAt": "2023-07-13T06:10:00+05:30",
+      "receivedAt": "2023-07-13T06:11:00+05:30",
+      "levelM": 204.7,
+      "confidence": 0.92,
+      "mode": "replay",
+      "sourceId": "ripple-demo-yamuna"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "yamuna-demo-003",
+      "eventId": "yamuna-2023-demo",
+      "sourceNodeId": "gauge-yamuna-01",
+      "observedAt": "2023-07-13T07:05:00+05:30",
+      "receivedAt": "2023-07-13T07:06:00+05:30",
+      "levelM": 205.35,
+      "confidence": 0.88,
+      "mode": "replay",
+      "sourceId": "ripple-demo-yamuna"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "yamuna-demo-004",
+      "eventId": "yamuna-2023-demo",
+      "sourceNodeId": "gauge-yamuna-01",
+      "observedAt": "2023-07-13T07:42:00+05:30",
+      "receivedAt": "2023-07-13T07:43:00+05:30",
+      "levelM": 205.78,
+      "confidence": 0.96,
+      "mode": "replay",
+      "sourceId": "ripple-demo-yamuna"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "yamuna-demo-005",
+      "eventId": "yamuna-2023-demo",
+      "sourceNodeId": "gauge-yamuna-01",
+      "observedAt": "2023-07-13T08:20:00+05:30",
+      "receivedAt": "2023-07-13T08:21:00+05:30",
+      "levelM": 206.12,
+      "confidence": 0.96,
+      "mode": "replay",
+      "sourceId": "ripple-demo-yamuna"
+    }
+  ]
+}
