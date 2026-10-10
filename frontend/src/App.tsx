@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { impacts, levelPoints, scenarioSteps, type Severity } from './data/scenario'
+import { impacts, levelPoints, mapEntities, riskZones, scenarioSteps, type EntityType, type Severity } from './data/scenario'
 import { apiConfigured, getHealth, predictShortage, type ShortageForecast } from './lib/api'
 
 const severityLabel: Record<Severity, string> = {
@@ -93,20 +93,21 @@ const graphNodes = [
   { id: 'chandrawal', x: 288, y: 286, label: 'Chandrawal', meta: 'WTP 02', kind: 'plant' },
   { id: 'north-zone', x: 505, y: 124, label: 'North Zone', meta: 'SUPPLY 04', kind: 'zone' },
   { id: 'central-zone', x: 505, y: 286, label: 'Central Zone', meta: 'SUPPLY 07', kind: 'zone' },
-  { id: 'hospital-a', x: 728, y: 84, label: 'Hospital', meta: 'CRITICAL 01', kind: 'critical' },
-  { id: 'shelter-a', x: 728, y: 170, label: 'Shelter', meta: 'SERVICE 04', kind: 'service' },
-  { id: 'hospital-b', x: 728, y: 286, label: 'Clinic', meta: 'CRITICAL 02', kind: 'critical' },
+  { id: 'school-a', x: 728, y: 72, label: 'School', meta: 'ENTITY 01', kind: 'critical' },
+  { id: 'restaurant-a', x: 728, y: 156, label: 'Restaurant', meta: 'ENTITY 04', kind: 'service' },
+  { id: 'college-a', x: 728, y: 240, label: 'College', meta: 'ENTITY 03', kind: 'service' },
+  { id: 'locality-a', x: 728, y: 324, label: 'Locality', meta: 'ZONE 07', kind: 'critical' },
 ]
 
 const graphEdges = [
   ['gauge', 'wazirabad'], ['gauge', 'chandrawal'], ['wazirabad', 'north-zone'], ['chandrawal', 'central-zone'],
-  ['north-zone', 'hospital-a'], ['north-zone', 'shelter-a'], ['central-zone', 'hospital-b'],
+  ['north-zone', 'school-a'], ['north-zone', 'restaurant-a'], ['north-zone', 'college-a'], ['central-zone', 'locality-a'],
 ]
 
 function CascadeGraph({ activeNodes, selected, onSelect }: { activeNodes: string[]; selected: string; onSelect: (id: string) => void }) {
   const byId = Object.fromEntries(graphNodes.map((node) => [node.id, node]))
   return (
-    <svg className="cascade-graph" viewBox="0 0 820 390" role="img" aria-label="Dependency cascade from river gauge to critical facilities">
+    <svg className="cascade-graph" viewBox="0 0 820 390" role="img" aria-label="Dependency cascade from river gauge to affected entities">
       <defs>
         <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
           <feGaussianBlur stdDeviation="7" result="blur" />
@@ -149,6 +150,175 @@ function CascadeGraph({ activeNodes, selected, onSelect }: { activeNodes: string
         <text x="16" y="8">PROPAGATION PATH / LIVE</text>
       </g>
     </svg>
+  )
+}
+
+const entityTypeLabel: Record<EntityType, string> = {
+  locality: 'Locality',
+  school: 'School',
+  college: 'College',
+  restaurant: 'Restaurant',
+  healthcare: 'Healthcare',
+}
+
+const entityTypeGlyph: Record<EntityType, string> = {
+  locality: 'L',
+  school: 'S',
+  college: 'C',
+  restaurant: 'R',
+  healthcare: '+',
+}
+
+function RiskMap() {
+  const [selectedZoneId, setSelectedZoneId] = useState('north')
+  const [selectedEntityId, setSelectedEntityId] = useState('map-school-north')
+  const [filter, setFilter] = useState<'all' | EntityType>('all')
+  const selectedZone = riskZones.find((zone) => zone.id === selectedZoneId) ?? riskZones[0]
+  const selectedEntity = mapEntities.find((entity) => entity.id === selectedEntityId)
+  const visibleEntities = filter === 'all' ? mapEntities : mapEntities.filter((entity) => entity.type === filter)
+
+  const selectZone = (zoneId: string) => {
+    setSelectedZoneId(zoneId)
+    const firstEntity = visibleEntities.find((entity) => entity.zoneId === zoneId)
+    setSelectedEntityId(firstEntity?.id ?? '')
+  }
+
+  const selectEntity = (entityId: string) => {
+    const entity = mapEntities.find((item) => item.id === entityId)
+    if (!entity) return
+    setSelectedEntityId(entityId)
+    setSelectedZoneId(entity.zoneId)
+  }
+
+  const setEntityFilter = (nextFilter: 'all' | EntityType) => {
+    setFilter(nextFilter)
+    const nextEntities = nextFilter === 'all' ? mapEntities : mapEntities.filter((entity) => entity.type === nextFilter)
+    const nextEntity = nextEntities.find((entity) => entity.zoneId === selectedZoneId) ?? nextEntities[0]
+    if (nextEntity) {
+      setSelectedEntityId(nextEntity.id)
+      setSelectedZoneId(nextEntity.zoneId)
+    } else {
+      setSelectedEntityId('')
+    }
+  }
+
+  return (
+    <div className="risk-map-shell">
+      <div className="map-toolbar">
+        <div>
+          <StatusDot severity={selectedZone.severity} />
+          <span>DELHI RESILIENCE SURFACE</span>
+          <small>CONTROLLED REPLAY · ILLUSTRATIVE ENTITIES</small>
+        </div>
+        <div className="map-filters" aria-label="Filter map entities">
+          {(['all', 'locality', 'school', 'college', 'restaurant', 'healthcare'] as const).map((item) => (
+            <button key={item} className={filter === item ? 'active' : ''} onClick={() => setEntityFilter(item)}>
+              {item === 'all' ? 'All nodes' : entityTypeLabel[item]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="risk-map-layout">
+        <div className="map-canvas">
+          <svg viewBox="0 0 640 640" role="img" aria-label="Interactive operational map of Delhi water-shortage risk zones">
+            <defs>
+              <filter id="mapGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+              <linearGradient id="mapRiver" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="var(--mint)" />
+                <stop offset="1" stopColor="var(--river)" />
+              </linearGradient>
+            </defs>
+            <g className="map-grid">
+              {Array.from({ length: 8 }, (_, index) => <path key={`h-${index}`} d={`M40 ${62 + index * 72}H600`} />)}
+              {Array.from({ length: 8 }, (_, index) => <path key={`v-${index}`} d={`M${68 + index * 72} 34V606`} />)}
+            </g>
+            <path className="delhi-shadow" d="M222 64L361 42l92 50-12 86 67 42 28 109-61 79-32 123-93 59-103-50-78-79 27-70-101-55-25-84 33-63 91-47Z" />
+            {riskZones.map((zone) => (
+              <g
+                key={zone.id}
+                className={`map-zone ${zone.severity} ${selectedZoneId === zone.id ? 'selected' : ''}`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${zone.name}, ${zone.risk}% shortage risk`}
+                onClick={() => selectZone(zone.id)}
+                onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') selectZone(zone.id) }}
+              >
+                <path d={zone.path} />
+                <text x={zone.labelX} y={zone.labelY} textAnchor="middle">{zone.name.replace(' Delhi', '').toUpperCase()}</text>
+                <text className="zone-risk-label" x={zone.labelX} y={zone.labelY + 15} textAnchor="middle">{zone.risk}% RISK</text>
+              </g>
+            ))}
+            <path className="map-yamuna-back" d="M425 52C406 117 462 153 439 214c-19 50 40 75 21 128-20 55 32 87 10 141-13 32-4 73 25 112" />
+            <path className="map-yamuna" d="M425 52C406 117 462 153 439 214c-19 50 40 75 21 128-20 55 32 87 10 141-13 32-4 73 25 112" />
+            <text className="river-map-label" x="478" y="112" transform="rotate(73 478 112)">YAMUNA / FLOW SIGNAL</text>
+
+            <g className="wtp-marker" transform="translate(414 180)">
+              <circle r="22" /><circle r="5" /><text x="31" y="-2">WAZIRABAD WTP</text><text className="wtp-meta" x="31" y="11">−38% EXPECTED SUPPLY</text>
+            </g>
+            <g className="wtp-marker secondary" transform="translate(409 285)">
+              <circle r="17" /><circle r="4" /><text x="25" y="-2">CHANDRAWAL</text><text className="wtp-meta" x="25" y="11">WATCH</text>
+            </g>
+
+            {visibleEntities.map((entity) => (
+              <g
+                key={entity.id}
+                className={`entity-marker ${entity.severity} ${selectedEntityId === entity.id ? 'selected' : ''}`}
+                transform={`translate(${entity.x} ${entity.y})`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${entity.name}, ${entityTypeLabel[entity.type]}, ${entity.eta}`}
+                onClick={(event) => { event.stopPropagation(); selectEntity(entity.id) }}
+                onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') selectEntity(entity.id) }}
+              >
+                {selectedEntityId === entity.id && <circle className="entity-pulse" r="25" />}
+                <circle className="entity-shell" r="14" filter={selectedEntityId === entity.id ? 'url(#mapGlow)' : undefined} />
+                <text y="4" textAnchor="middle">{entityTypeGlyph[entity.type]}</text>
+              </g>
+            ))}
+          </svg>
+
+          <div className="map-legend">
+            <span><i className="stable" />Stable</span>
+            <span><i className="watch" />Watch</span>
+            <span><i className="warning" />Warning</span>
+            <span><i className="critical" />Critical</span>
+          </div>
+          <div className="map-disclaimer">Operational abstraction · not a navigation map</div>
+        </div>
+
+        <aside className="map-inspector" aria-live="polite">
+          <div className="map-inspector-head">
+            <div><small>SELECTED SUPPLY ZONE</small><h3>{selectedZone.name}</h3></div>
+            <strong>{selectedZone.risk}<sup>%</sup></strong>
+          </div>
+          <div className="zone-metrics">
+            <div><small>SUPPLY SOURCE</small><b>{selectedZone.plant}</b></div>
+            <div><small>EXPECTED DROP</small><b>−{selectedZone.supplyDrop}%</b></div>
+            <div><small>NODES AT RISK</small><b>{selectedZone.affectedEntities}</b></div>
+          </div>
+          <div className="map-drivers"><small>RISK DRIVERS</small>{selectedZone.drivers.map((driver) => <span key={driver}>{driver}</span>)}</div>
+
+          {selectedEntity ? (
+            <div className="entity-insight">
+              <div className="entity-insight-label"><span>{entityTypeGlyph[selectedEntity.type]}</span><small>{entityTypeLabel[selectedEntity.type]} impact</small></div>
+              <h4>{selectedEntity.name}</h4>
+              <div className="entity-metrics">
+                <span><small>DEMAND</small><b>{selectedEntity.demand}</b></span>
+                <span><small>RESERVE</small><b>{selectedEntity.reserve}</b></span>
+                <span><small>IMPACT ETA</small><b>{selectedEntity.eta}</b></span>
+              </div>
+              <div className="entity-action"><small>NEXT SAFE ACTION</small><p>{selectedEntity.action}</p></div>
+            </div>
+          ) : (
+            <div className="entity-insight empty"><p>No {filter} node is mapped in this zone.</p></div>
+          )}
+        </aside>
+      </div>
+    </div>
   )
 }
 
@@ -320,9 +490,9 @@ function App() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#console">Console</a>
+          <a href="#map">Risk map</a>
           <a href="#trace">Trace</a>
           <a href="#advisory">Advisory</a>
-          <a href="#system">System</a>
         </nav>
         <div className="header-actions">
           <button className="text-button" onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')} aria-label="Change language">
@@ -345,7 +515,7 @@ function App() {
                   backendStatus === 'fallback' ? 'LOCAL REPLAY · API FALLBACK' : 'YAMUNA REPLAY · SYSTEM ARMED'
             }</div>
             <h1>See the shortage<br /><em>before it arrives.</em></h1>
-            <p className="hero-lede">Ripple turns a river warning into a traceable chain of downstream consequences—so hospitals, water teams, and public services get time to act.</p>
+            <p className="hero-lede">Ripple turns a river warning into a traceable chain of downstream consequences—so localities, schools, restaurants, hospitals, and water teams get time to act.</p>
             <div className="hero-actions">
               <a className="primary-button" href="#console">Run the scenario <ArrowIcon /></a>
               <a className="secondary-button" href="#trace">Follow the signal <ArrowIcon down /></a>
@@ -367,7 +537,7 @@ function App() {
         <section className="signal-strip" aria-label="Current scenario statistics">
           <div><span>01</span><strong>206.12 m</strong><small>PEAK LEVEL / REPLAY</small></div>
           <div><span>02</span><strong>3 assets</strong><small>TREATMENT PLANTS WATCHED</small></div>
-          <div><span>03</span><strong>38 min</strong><small>EARLIEST SERVICE IMPACT</small></div>
+          <div><span>03</span><strong>38 min</strong><small>EARLIEST ENTITY IMPACT</small></div>
           <div><span>04</span><strong>4 hops</strong><small>FULL CAUSAL TRACE</small></div>
         </section>
 
@@ -407,7 +577,7 @@ function App() {
                 <CascadeGraph activeNodes={current.activeNodes} selected={selectedImpact} onSelect={(id) => {
                   if (impacts.some((impact) => impact.id === id)) setSelectedImpact(id)
                 }} />
-                <div className="graph-caption"><span>Click a facility node to inspect its path</span><span>Source → Treatment → Zone → Service</span></div>
+                <div className="graph-caption"><span>Click an entity node to inspect its path</span><span>Source → Treatment → Zone → Entity</span></div>
               </div>
               <aside className="event-panel">
                 <div className="panel-header"><span>EVENT LOG</span><small>{step + 1} / {scenarioSteps.length}</small></div>
@@ -426,9 +596,19 @@ function App() {
           </div>
         </section>
 
-        <section className="section-block trace-section" id="trace">
+        <section className="section-block map-section" id="map">
           <SectionHeading
             number="02"
+            label="RISK GEOGRAPHY"
+            title={<>Know where risk lands.<br /><em>Then protect what matters.</em></>}
+            copy="A single operational surface connects supply-zone risk with the different demand and reserve profile of every locality, school, college, restaurant, and health facility."
+          />
+          <RiskMap />
+        </section>
+
+        <section className="section-block trace-section" id="trace">
+          <SectionHeading
+            number="03"
             label="EXPLAINABILITY"
             title={<>Never just an alert.<br /><em>Always a reason.</em></>}
             copy="Every recommendation carries its evidence, dependency path, estimated arrival time, confidence, and a human-readable next action."
@@ -477,10 +657,10 @@ function App() {
 
         <section className="section-block advisory-section" id="advisory">
           <SectionHeading
-            number="03"
+            number="04"
             label="ACTION LAYER"
             title={<>Complex model in.<br /><em>Clear action out.</em></>}
-            copy="Operators get the full trace. Facilities get only the verified facts and the next safe action—in English or Hindi."
+            copy="Operators get the full trace. Localities and establishments get only the verified facts and the next safe action—in English or Hindi."
           />
 
           <div className="advisory-stage">
@@ -500,8 +680,8 @@ function App() {
                 <div className="phone-alert-head"><span>WATER SUPPLY</span><b>WARNING</b></div>
                 <h4>{language === 'EN' ? 'Prepare for possible supply disruption' : 'Sambhavit water supply disruption ke liye taiyaar rahein'}</h4>
                 <p>{language === 'EN'
-                  ? 'North District Hospital may experience reduced municipal supply in approximately 38 minutes.'
-                  : 'North District Hospital mein lagbhag 38 minute mein municipal supply kam ho sakti hai.'}</p>
+                  ? `${selected.name} may experience reduced municipal supply in approximately ${selected.eta}.`
+                  : `${selected.name} mein lagbhag ${selected.eta} mein municipal supply kam ho sakti hai.`}</p>
                 <div className="phone-metric"><span>EXPECTED IN</span><strong>00:38:00</strong></div>
                 <div className="phone-action"><small>NEXT ACTION</small><p>{language === 'EN' ? selected.action : selected.actionHi}</p></div>
               </div>
@@ -513,7 +693,7 @@ function App() {
 
         <section className="section-block system-section" id="system">
           <SectionHeading
-            number="04"
+            number="05"
             label="SYSTEM DESIGN"
             title={<>Small enough to demo.<br /><em>Built to expand.</em></>}
             copy="A focused event-driven architecture on AWS keeps the hackathon build credible, observable, and ready for additional cities and dependencies."
