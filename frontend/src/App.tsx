@@ -254,13 +254,18 @@ function RiskMap() {
             ))}
             <path className="map-yamuna-back" d="M425 52C406 117 462 153 439 214c-19 50 40 75 21 128-20 55 32 87 10 141-13 32-4 73 25 112" />
             <path className="map-yamuna" d="M425 52C406 117 462 153 439 214c-19 50 40 75 21 128-20 55 32 87 10 141-13 32-4 73 25 112" />
-            <text className="river-map-label" x="478" y="112" transform="rotate(73 478 112)">YAMUNA / FLOW SIGNAL</text>
+            <g className="river-map-callout" transform="translate(479 105)">
+              <path d="M-43 43L-7 25" />
+              <rect width="123" height="38" rx="7" />
+              <text x="12" y="16">YAMUNA</text>
+              <text className="river-map-meta" x="12" y="28">FLOW SIGNAL</text>
+            </g>
 
             <g className="wtp-marker" transform="translate(414 180)">
-              <circle r="22" /><circle r="5" /><text x="31" y="-2">WAZIRABAD WTP</text><text className="wtp-meta" x="31" y="11">−38% EXPECTED SUPPLY</text>
+              <circle r="22" /><circle r="5" /><text x="-31" y="-2" textAnchor="end">WAZIRABAD WTP</text><text className="wtp-meta" x="-31" y="11" textAnchor="end">−38% EXPECTED SUPPLY</text>
             </g>
             <g className="wtp-marker secondary" transform="translate(409 285)">
-              <circle r="17" /><circle r="4" /><text x="25" y="-2">CHANDRAWAL</text><text className="wtp-meta" x="25" y="11">WATCH</text>
+              <circle r="17" /><circle r="4" /><text x="-27" y="-2" textAnchor="end">CHANDRAWAL</text><text className="wtp-meta" x="-27" y="11" textAnchor="end">WATCH</text>
             </g>
 
             {visibleEntities.map((entity) => (

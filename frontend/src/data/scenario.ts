@@ -172,28 +172,28 @@ export const riskZones: RiskZone[] = [
     id: 'north', name: 'North Delhi', plant: 'Wazirabad WTP', severity: 'critical', risk: 84,
     supplyDrop: 38, affectedEntities: 18,
     path: 'M222 64 L361 42 L453 92 L441 178 L374 224 L259 205 L194 142 Z',
-    labelX: 325, labelY: 128,
+    labelX: 255, labelY: 116,
     drivers: ['WTP capacity loss', 'Fast river rise', 'Complaint acceleration'],
   },
   {
     id: 'west', name: 'West Delhi', plant: 'Haiderpur WTP', severity: 'stable', risk: 22,
     supplyDrop: 6, affectedEntities: 4,
     path: 'M103 189 L194 142 L259 205 L271 316 L196 391 L95 336 L70 252 Z',
-    labelX: 168, labelY: 278,
+    labelX: 150, labelY: 305,
     drivers: ['Normal production', 'Stable reserve', 'Low complaint volume'],
   },
   {
     id: 'central', name: 'Central Delhi', plant: 'Chandrawal WTP', severity: 'warning', risk: 67,
     supplyDrop: 24, affectedEntities: 11,
     path: 'M259 205 L374 224 L427 300 L374 376 L271 316 Z',
-    labelX: 343, labelY: 287,
+    labelX: 315, labelY: 282,
     drivers: ['Chandrawal watch', 'Low-pressure reports', 'Peak demand window'],
   },
   {
     id: 'east', name: 'East Delhi', plant: 'Bhagirathi WTP', severity: 'watch', risk: 43,
     supplyDrop: 12, affectedEntities: 7,
     path: 'M441 178 L508 220 L536 329 L475 408 L374 376 L427 300 L374 224 Z',
-    labelX: 457, labelY: 293,
+    labelX: 486, labelY: 330,
     drivers: ['Distribution lag', 'Moderate demand', 'Reserve available'],
   },
   {
@@ -206,12 +206,12 @@ export const riskZones: RiskZone[] = [
 ]
 
 export const mapEntities: MapEntity[] = [
-  { id: 'map-school-north', name: 'North Delhi Public School', type: 'school', zoneId: 'north', x: 307, y: 112, demand: '41.4 KL/day', reserve: '10.5 hr', eta: '38 min', severity: 'critical', action: 'Verify storage and alert operations.' },
-  { id: 'map-college-north', name: 'North Campus College', type: 'college', zoneId: 'north', x: 365, y: 164, demand: '126 KL/day', reserve: '28 hr', eta: '2 hr 34 min', severity: 'watch', action: 'Pause non-essential campus use.' },
-  { id: 'map-health-central', name: 'Civil Lines Clinic', type: 'healthcare', zoneId: 'central', x: 356, y: 257, demand: '31 KL/day', reserve: '12 hr', eta: '1 hr 12 min', severity: 'warning', action: 'Protect clinical reserve and verify tank level.' },
+  { id: 'map-school-north', name: 'North Delhi Public School', type: 'school', zoneId: 'north', x: 308, y: 82, demand: '41.4 KL/day', reserve: '10.5 hr', eta: '38 min', severity: 'critical', action: 'Verify storage and alert operations.' },
+  { id: 'map-college-north', name: 'North Campus College', type: 'college', zoneId: 'north', x: 353, y: 148, demand: '126 KL/day', reserve: '28 hr', eta: '2 hr 34 min', severity: 'watch', action: 'Pause non-essential campus use.' },
+  { id: 'map-health-central', name: 'Civil Lines Clinic', type: 'healthcare', zoneId: 'central', x: 368, y: 250, demand: '31 KL/day', reserve: '12 hr', eta: '1 hr 12 min', severity: 'warning', action: 'Protect clinical reserve and verify tank level.' },
   { id: 'map-locality-central', name: 'Civil Lines Locality', type: 'locality', zoneId: 'central', x: 309, y: 319, demand: '2.1 ML/day', reserve: 'Mixed', eta: '1 hr 12 min', severity: 'warning', action: 'Notify residents and stage tankers.' },
   { id: 'map-restaurant-east', name: 'Kashmere Gate Kitchen', type: 'restaurant', zoneId: 'east', x: 458, y: 273, demand: '8.4 KL/day', reserve: '6.2 hr', eta: '2 hr 05 min', severity: 'watch', action: 'Schedule a 5 KL replenishment window.' },
-  { id: 'map-school-west', name: 'West Delhi Senior School', type: 'school', zoneId: 'west', x: 178, y: 270, demand: '52 KL/day', reserve: '31 hr', eta: 'No impact', severity: 'stable', action: 'Continue normal monitoring.' },
+  { id: 'map-school-west', name: 'West Delhi Senior School', type: 'school', zoneId: 'west', x: 155, y: 248, demand: '52 KL/day', reserve: '31 hr', eta: 'No impact', severity: 'stable', action: 'Continue normal monitoring.' },
   { id: 'map-restaurant-south', name: 'South Market Food Court', type: 'restaurant', zoneId: 'south', x: 376, y: 446, demand: '19 KL/day', reserve: '8.5 hr', eta: '3 hr 10 min', severity: 'warning', action: 'Reduce cleaning-cycle demand and verify reserve.' },
   { id: 'map-locality-east', name: 'Shahdara Pocket', type: 'locality', zoneId: 'east', x: 480, y: 345, demand: '1.6 ML/day', reserve: 'Mixed', eta: '4 hr 20 min', severity: 'watch', action: 'Monitor complaint acceleration.' },
 ]
