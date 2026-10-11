@@ -2,12 +2,93 @@
   "schemaVersion": "1.0",
   "sources": [
     {
+      "sourceId": "src-cwc-yamuna-hourly",
+      "label": "CWC Yamuna Basin Manual Hourly River Water Level (2021-2025)",
+      "publisher": "Central Water Commission (CWC) / NWIC",
+      "canonicalUrl": "https://nwdp.nwic.gov.in/dataset/river-water-level-manual-hourly-cwc-subernarekha/resource/dd3b9bba-6ba2-4954-93cf-e3ee84b5d9af",
+      "downloadUrl": "https://nwdp.nwic.gov.in/dataset/d951a09c-6cf8-470e-be77-e80116f13d34/resource/dd3b9bba-6ba2-4954-93cf-e3ee84b5d9af/download/rwl_manual_hr_cwc_998_2021_2025.csv",
+      "license": "Government Open Data License - India (GODL)",
+      "format": "csv",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Hourly manual water level series for Juddo Dam (Dehradun, Uttarakhand) and Chitrakoot (Satna, MP) across 2024-2025. Does not contain Delhi city gauge records."
+    },
+    {
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "label": "Delhi Floods - 2023: A Case Study (Pub. Jan 2025)",
+      "publisher": "Central Water Commission (CWC), Hydrology (Urban) Directorate",
+      "canonicalUrl": "https://cwc.gov.in/sites/default/files/delhi-floods-2023-case-study.pdf",
+      "license": "Official Government Report",
+      "format": "pdf",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Definitive hydrology case study documenting Hathnikund peak release (3.59L cusecs on 11 July), Old Railway Bridge Warning Level (204.5m), Danger Level (205.33m), and all-time peak HFL (208.66m on 13 July 2023)."
+    },
+    {
+      "sourceId": "src-nidm-yamuna-2025",
+      "label": "Impact of Inundation along River Yamuna in Delhi (2025)",
+      "publisher": "National Institute of Disaster Management (NIDM), Ministry of Home Affairs",
+      "canonicalUrl": "https://nidm.gov.in/PDF/pubs/Yamuna_2025.pdf",
+      "license": "Official Disaster Management Publication",
+      "format": "pdf",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Documents flood inundation and shutdown of Wazirabad, Chandrawal, and Okhla WTPs on 13 July 2023, 25% production cut at Sonia Vihar, evacuation of Sushruta Trauma Centre, and evacuation of 26,401 residents."
+    },
+    {
+      "sourceId": "src-djb-bulletin-20240726",
+      "label": "DJB Summer Bulletin 26 July 2024",
+      "publisher": "Delhi Jal Board, Govt. of NCT of Delhi",
+      "canonicalUrl": "https://delhijalboard.delhi.gov.in/sites/default/files/Jalboard/universal-tab/summer_bulletin_26.07.2024_1.pdf",
+      "license": "Public Utility Bulletin",
+      "format": "pdf",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Official daily water production report documenting 904 MGD actual production (-52 MGD deficit), with facility shortfalls: Wazirabad 96 MGD (-35 MGD) and Chandrawal 76 MGD (-18 MGD)."
+    },
+    {
+      "sourceId": "src-djb-bulletin-20240505",
+      "label": "DJB Summer Bulletin 5 May 2024 (SITREP for 04.05.2024)",
+      "publisher": "Delhi Jal Board, Govt. of NCT of Delhi",
+      "canonicalUrl": "https://delhijalboard.delhi.gov.in/sites/default/files/Jalboard/universal-tab/summer_bulletin_05.05.2024.pdf",
+      "license": "Public Utility Bulletin",
+      "format": "pdf",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Peak baseline production report documenting 1004.31 MGD citywide output and 1916 CRM complaint log (528 water complaints, 106 tanker requests)."
+    },
+    {
+      "sourceId": "src-delhi-hospitals-registry",
+      "label": "Delhi Government Hospitals Official Directory",
+      "publisher": "Department of Health & Family Welfare, Govt. of NCT of Delhi",
+      "canonicalUrl": "https://health.delhi.gov.in/health/delhi-government-hospitals",
+      "license": "Official Government Portal Directory",
+      "format": "html_table",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Verified list of 31 Delhi government hospitals with names, street addresses, and official contact details."
+    },
+    {
+      "sourceId": "src-mohfw-iphs-guidelines",
+      "label": "Indian Public Health Standards (IPHS) Guidelines for District Hospitals",
+      "publisher": "Ministry of Health & Family Welfare (MoHFW), Govt. of India",
+      "canonicalUrl": "https://clinicalestablishments.mohfw.gov.in/sites/default/files/2021-12/108.pdf",
+      "license": "Official Ministry Standards",
+      "format": "pdf",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Official engineering guideline specifying water requirement norm of 450 to 500 litres per bed per day for district hospitals (Page 47)."
+    },
+    {
       "sourceId": "ripple-demo-yamuna",
-      "label": "Ripple synthetic replay fixture",
-      "publisher": "Ripple contributors",
+      "label": "Ripple Synthetic Demonstration Fixture",
+      "publisher": "Ripple Contributors",
+      "canonicalUrl": "https://github.com/Raghav7-tech/Ripple",
+      "license": "Repository Demonstration Data",
+      "format": "json",
       "evidenceStatus": "demonstration",
       "operationalUseAllowed": false,
-      "notes": "Values, dependency delays, facilities, and confidence weights are explicitly synthetic. Replace this source with a reviewed government or utility feed before any field pilot."
+      "notes": "Retained for synthetic unit testing and demonstration only. Must never be confused with verified historical data."
     }
   ]
 }

@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "1.0",
+  "eventId": "yamuna-july-2023-flood-event",
+  "title": "July 2023 Yamuna River Flood & Water Treatment Plant Closure Chronology",
+  "description": "Evidence-backed event chronology of the July 2023 Delhi flood disaster, cited from official CWC and NIDM reports.",
+  "primarySources": [
+    {
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "title": "Delhi Floods - 2023: A Case Study",
+      "publisher": "Central Water Commission (CWC)",
+      "published": "January 2025"
+    },
+    {
+      "sourceId": "src-nidm-yamuna-2025",
+      "title": "Impact of Inundation along River Yamuna in Delhi",
+      "publisher": "National Institute of Disaster Management (NIDM)",
+      "published": "2025"
+    }
+  ],
+  "totalSteps": 8,
+  "steps": [
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 1,
+      "timestamp": "2023-07-11T11:00:00+05:30",
+      "phase": "upstream_surge",
+      "locationId": "barrage-hathnikund",
+      "locationName": "Hathnikund Barrage (Haryana)",
+      "headline": "Hathnikund Barrage releases peak monsoon discharge of 3.59 Lakh cusecs",
+      "description": "Following extreme precipitation across the upper Yamuna catchment, Hathnikund Barrage released its peak monsoon flood discharge of 3.59 Lakh cusecs (10,165 cumecs) into the downstream Yamuna. CWC estimates flood travel time of 2.0 to 2.5 days to reach the Delhi NCT reach.",
+      "reportedMetrics": {
+        "dischargeCusecs": 359000,
+        "dischargeCumecs": 10165,
+        "travelTimeDays": 2.2
+      },
+      "evidenceClassification": "reported_event",
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "sourceLocator": "CWC Delhi Floods 2023 Case Study, Section 2.1, Page 9",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 2,
+      "timestamp": "2023-07-11T17:00:00+05:30",
+      "phase": "warning_threshold",
+      "locationId": "gauge-delhi-orb",
+      "locationName": "Old Delhi Railway Bridge (ORB) Gauge",
+      "headline": "Yamuna water level crosses official Warning Level (204.50 m) at Old Railway Bridge",
+      "description": "The Old Railway Bridge CWC hydrometric station recorded river levels rising past the official warning threshold of 204.50 m, triggering initial municipal flood alerts.",
+      "reportedMetrics": {
+        "waterLevelM": 204.5,
+        "officialThreshold": "Warning Level (204.50m)"
+      },
+      "evidenceClassification": "observed",
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "sourceLocator": "CWC Delhi Floods 2023 Case Study, Section 1, Page 6",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 3,
+      "timestamp": "2023-07-12T08:00:00+05:30",
+      "phase": "danger_threshold",
+      "locationId": "gauge-delhi-orb",
+      "locationName": "Old Delhi Railway Bridge (ORB) Gauge",
+      "headline": "Yamuna crosses official Danger Level (205.33 m); low-lying evacuation initiated",
+      "description": "River level breached the Danger Level of 205.33 m. Delhi Disaster Management Authority (DDMA) directed evacuation of floodplains across North, Central, and East Delhi districts.",
+      "reportedMetrics": {
+        "waterLevelM": 205.33,
+        "officialThreshold": "Danger Level (205.33m)"
+      },
+      "evidenceClassification": "observed",
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "sourceLocator": "CWC Delhi Floods 2023 Case Study, Section 1, Page 6",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 4,
+      "timestamp": "2023-07-12T13:00:00+05:30",
+      "phase": "hfl_breach",
+      "locationId": "gauge-delhi-orb",
+      "locationName": "Old Delhi Railway Bridge (ORB) Gauge",
+      "headline": "Yamuna level breaches 45-year-old Highest Flood Level (207.49 m)",
+      "description": "At 13:00 hrs on 12 July 2023, the Yamuna River level at the Old Railway Bridge surpassed its previous Highest Flood Level of 207.49 m (set on 6 September 1978), reaching unprecedented flood heights.",
+      "reportedMetrics": {
+        "waterLevelM": 207.49,
+        "historicalRecordSurpassed": "6 Sept 1978 (207.49m)"
+      },
+      "evidenceClassification": "observed",
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "sourceLocator": "CWC Delhi Floods 2023 Case Study, Section 2.1, Page 9",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 5,
+      "timestamp": "2023-07-13T09:00:00+05:30",
+      "phase": "wtp_shutdown",
+      "locationId": "wtp-cluster-delhi",
+      "locationName": "Wazirabad, Chandrawal, and Okhla Water Treatment Plants",
+      "headline": "Three major WTPs forced to shut down due to pump house inundation (-245 MGD capacity cut)",
+      "description": "Raging Yamuna waters submerged intake pumps and raw water infrastructure at Wazirabad, Chandrawal, and Okhla WTPs, forcing complete plant shutdowns. Production at Sonia Vihar WTP was reduced by 25%. Drinking water supply rationalization declared across North, Central, and South Delhi.",
+      "reportedMetrics": {
+        "wtpsShutdown": [
+          "Wazirabad",
+          "Chandrawal",
+          "Okhla"
+        ],
+        "capacityOfflineMgd": 245.0,
+        "soniaViharCutPercent": 25.0
+      },
+      "evidenceClassification": "reported_event",
+      "sourceId": "src-nidm-yamuna-2025",
+      "sourceLocator": "NIDM Yamuna Urban Flood Report, Section 5, Page 77 & 89",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 6,
+      "timestamp": "2023-07-13T11:30:00+05:30",
+      "phase": "hospital_evacuation",
+      "locationId": "hosp-del-31",
+      "locationName": "Sushruta Trauma Centre (Civil Lines)",
+      "headline": "Floodwaters inundate Sushruta Trauma Centre; emergency evacuation of patients initiated",
+      "description": "River water overflowed into the premises of Delhi Government's Sushruta Trauma Centre at Metcalf Road, Civil Lines. Patients were evacuated and relocated to Lok Nayak (LNJP) Hospital and neighboring centers. Access to St. Stephen's Hospital was severely constrained.",
+      "reportedMetrics": {
+        "facilityInundated": "Sushruta Trauma Centre",
+        "receivingHospital": "Lok Nayak (LNJP)"
+      },
+      "evidenceClassification": "reported_event",
+      "sourceId": "src-nidm-yamuna-2025",
+      "sourceLocator": "NIDM Yamuna Urban Flood Report, Section 5, Page 77",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 7,
+      "timestamp": "2023-07-13T18:00:00+05:30",
+      "phase": "peak_flood_crest",
+      "locationId": "gauge-delhi-orb",
+      "locationName": "Old Delhi Railway Bridge (ORB) Gauge",
+      "headline": "Yamuna hits all-time peak crest of 208.66 m; Ring Road and Yamuna Bazar inundated under 8-10 ft",
+      "description": "At 18:00 hrs on 13 July 2023, the Yamuna River reached its historic all-time crest of 208.66 m. River embankments overtopped between Wazirabad and Okhla. Yamuna Bazar, Nigambodh Ghat, Monastery Market, and Ring Road submerged under up to 10 feet of water.",
+      "reportedMetrics": {
+        "allTimePeakM": 208.66,
+        "previousRecordM": 207.49,
+        "floodDepthFt": "8-10 ft at Yamuna Bazar"
+      },
+      "evidenceClassification": "observed",
+      "sourceId": "src-cwc-delhi-floods-2023",
+      "sourceLocator": "CWC Delhi Floods 2023 Case Study, Section 2.1, Page 9",
+      "reviewStatus": "verified"
+    },
+    {
+      "eventId": "flood-delhi-2023",
+      "stepIndex": 8,
+      "timestamp": "2023-07-14T10:00:00+05:30",
+      "phase": "relief_mobilization",
+      "locationId": "delhi-relief-camps",
+      "locationName": "Delhi District Relief Shelters",
+      "headline": "26,401 citizens evacuated to relief camps; water tanker convoys mobilized for hospitals",
+      "description": "Government of NCT of Delhi reported 26,401 evacuated citizens sheltered across camps and pucca school buildings. Emergency water tankers and health inspection teams mobilized to support critical facilities.",
+      "reportedMetrics": {
+        "evacuatedCitizens": 26401,
+        "reliefDistricts": 6
+      },
+      "evidenceClassification": "reported_event",
+      "sourceId": "src-nidm-yamuna-2025",
+      "sourceLocator": "NIDM Yamuna Urban Flood Report, Chapter 7, Page 93",
+      "reviewStatus": "verified"
+    }
+  ]
+}

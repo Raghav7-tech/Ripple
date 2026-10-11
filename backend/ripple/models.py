@@ -37,6 +37,12 @@ class EvidenceStatus(str, Enum):
     DEMONSTRATION = "demonstration"
 
 
+class ResourceType(str, Enum):
+    WATER = "water"
+    STAFF = "staff"
+    MEDICAL_SUPPLY = "medical_supply"
+
+
 def _required(data: dict[str, Any], key: str, context: str) -> Any:
     value = data.get(key)
     if value is None or value == "":
@@ -153,6 +159,7 @@ class Edge:
     min_severity: Severity
     evidence_status: EvidenceStatus
     assumption: str | None = None
+    resource_type: ResourceType = ResourceType.WATER
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Edge":
@@ -168,6 +175,18 @@ class Edge:
         assumption = data.get("assumption")
         if status is not EvidenceStatus.VERIFIED and not assumption:
             raise ValidationError(f"edge[{edge_id}] requires an assumption note")
+        if "resourceType" in data:
+            raw_resource = data["resourceType"]
+            if not isinstance(raw_resource, str):
+                raise ValidationError(f"edge[{edge_id}].resourceType must be a string")
+            try:
+                resource_type = ResourceType(raw_resource)
+            except ValueError as exc:
+                raise ValidationError(
+                    f"edge[{edge_id}].resourceType must be water, staff, or medical_supply"
+                ) from exc
+        else:
+            resource_type = ResourceType.WATER
         return cls(
             edge_id=edge_id,
             source=str(_required(data, "from", f"edge[{edge_id}]")),
@@ -177,6 +196,7 @@ class Edge:
             min_severity=min_severity,
             evidence_status=status,
             assumption=str(assumption) if assumption else None,
+            resource_type=resource_type,
         )
 
 
@@ -276,6 +296,7 @@ class PathStep:
     confidence: float
     evidence_status: EvidenceStatus
     assumption: str | None
+    resource_type: ResourceType = ResourceType.WATER
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PathStep":
@@ -286,6 +307,18 @@ class PathStep:
         delay = _number(_required(data, "delayMinutes", "pathStep"), "pathStep.delayMinutes")
         if not delay.is_integer() or delay < 0:
             raise ValidationError("pathStep.delayMinutes must be a non-negative integer")
+        if "resourceType" in data:
+            raw_resource = data["resourceType"]
+            if not isinstance(raw_resource, str):
+                raise ValidationError("pathStep.resourceType must be a string")
+            try:
+                resource_type = ResourceType(raw_resource)
+            except ValueError as exc:
+                raise ValidationError(
+                    "pathStep.resourceType must be water, staff, or medical_supply"
+                ) from exc
+        else:
+            resource_type = ResourceType.WATER
         return cls(
             edge_id=str(_required(data, "edgeId", "pathStep")),
             source=str(_required(data, "from", "pathStep")),
@@ -294,6 +327,7 @@ class PathStep:
             confidence=_confidence(data.get("confidence", 1.0), "pathStep.confidence"),
             evidence_status=evidence_status,
             assumption=str(data["assumption"]) if data.get("assumption") else None,
+            resource_type=resource_type,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -305,6 +339,7 @@ class PathStep:
             "confidence": self.confidence,
             "evidenceStatus": self.evidence_status.value,
             "assumption": self.assumption,
+            "resourceType": self.resource_type.value,
         }
 
 
@@ -321,6 +356,7 @@ class ImpactResult:
     path: tuple[PathStep, ...]
     assumptions: tuple[str, ...] = field(default_factory=tuple)
     action_code: str = "VERIFY_RESERVE"
+    resource_type: ResourceType = ResourceType.WATER
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ImpactResult":
@@ -340,6 +376,18 @@ class ImpactResult:
         assumptions = data.get("assumptions", [])
         if not isinstance(assumptions, list) or any(not isinstance(item, str) for item in assumptions):
             raise ValidationError("impact.assumptions must be an array of strings")
+        if "resourceType" in data:
+            raw_resource = data["resourceType"]
+            if not isinstance(raw_resource, str):
+                raise ValidationError("impact.resourceType must be a string")
+            try:
+                resource_type = ResourceType(raw_resource)
+            except ValueError as exc:
+                raise ValidationError(
+                    "impact.resourceType must be water, staff, or medical_supply"
+                ) from exc
+        else:
+            resource_type = ResourceType.WATER
         return cls(
             impact_id=str(_required(data, "impactId", "impact")),
             run_id=str(_required(data, "runId", "impact")),
@@ -354,6 +402,7 @@ class ImpactResult:
             path=tuple(PathStep.from_dict(item) for item in path),
             assumptions=tuple(assumptions),
             action_code=str(_required(data, "actionCode", "impact")),
+            resource_type=resource_type,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -366,6 +415,7 @@ class ImpactResult:
             "etaMinutes": self.eta_minutes,
             "severity": self.severity.value,
             "confidence": self.confidence,
+            "resourceType": self.resource_type.value,
             "path": [step.to_dict() for step in self.path],
             "assumptions": list(self.assumptions),
             "actionCode": self.action_code,

@@ -52,13 +52,15 @@
           "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
           "minSeverity": { "$ref": "#/$defs/severity" },
           "evidenceStatus": { "$ref": "#/$defs/evidenceStatus" },
-          "assumption": { "type": "string", "minLength": 1 }
+          "assumption": { "type": "string", "minLength": 1 },
+          "resourceType": { "$ref": "#/$defs/resourceType" }
         }
       }
     }
   },
   "$defs": {
     "severity": { "enum": ["stable", "watch", "warning", "critical"] },
-    "evidenceStatus": { "enum": ["verified", "inferred", "demonstration"] }
+    "evidenceStatus": { "enum": ["verified", "inferred", "demonstration"] },
+    "resourceType": { "enum": ["water", "staff", "medical_supply"] }
   }
 }

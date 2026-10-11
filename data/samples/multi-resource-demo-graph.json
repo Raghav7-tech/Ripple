@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "1.0",
+  "graphVersion": "multi-resource-demo-v1",
+  "createdAt": "2026-10-11T10:00:00+05:30",
+  "approvedAt": null,
+  "thresholdsM": {
+    "watch": 204.5,
+    "warning": 205.33,
+    "critical": 206.0
+  },
+  "nodes": [
+    {
+      "nodeId": "gauge-demo-01",
+      "name": "Synthetic Demonstration Gauge",
+      "type": "gauge",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration river gauge trigger node."
+    },
+    {
+      "nodeId": "wtp-demo-01",
+      "name": "Synthetic Treatment Plant",
+      "type": "treatment-plant",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration water treatment facility."
+    },
+    {
+      "nodeId": "zone-demo-01",
+      "name": "Synthetic Water Supply Zone",
+      "type": "supply-zone",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration municipal water supply zone."
+    },
+    {
+      "nodeId": "corridor-demo-01",
+      "name": "Synthetic Transit Corridor",
+      "type": "transit-corridor",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration roadway corridor subject to inundation."
+    },
+    {
+      "nodeId": "staff-pool-demo-01",
+      "name": "Synthetic Staff Resource Pool",
+      "type": "staff-pool",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration healthcare shift mobilization pool."
+    },
+    {
+      "nodeId": "supply-route-demo-01",
+      "name": "Synthetic Logistics Route",
+      "type": "supply-route",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration freight delivery corridor."
+    },
+    {
+      "nodeId": "medical-depot-demo-01",
+      "name": "Synthetic Medical Depot",
+      "type": "medical-depot",
+      "notify": false,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration regional medical warehouse."
+    },
+    {
+      "nodeId": "hospital-demo-01",
+      "name": "Synthetic Demonstration Hospital",
+      "type": "hospital",
+      "notify": true,
+      "severityCap": "critical",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional demonstration hospital asset for multi-resource cascade testing."
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "e-water-01",
+      "from": "gauge-demo-01",
+      "to": "wtp-demo-01",
+      "delayMinutes": 8,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional water intake flood delay.",
+      "resourceType": "water"
+    },
+    {
+      "edgeId": "e-water-02",
+      "from": "wtp-demo-01",
+      "to": "zone-demo-01",
+      "delayMinutes": 18,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional treatment plant to distribution zone propagation delay.",
+      "resourceType": "water"
+    },
+    {
+      "edgeId": "e-water-03",
+      "from": "zone-demo-01",
+      "to": "hospital-demo-01",
+      "delayMinutes": 12,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional municipal water pipe supply failure delay.",
+      "resourceType": "water"
+    },
+    {
+      "edgeId": "e-staff-01",
+      "from": "gauge-demo-01",
+      "to": "corridor-demo-01",
+      "delayMinutes": 10,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional road waterlogging delay affecting staff transit.",
+      "resourceType": "staff"
+    },
+    {
+      "edgeId": "e-staff-02",
+      "from": "corridor-demo-01",
+      "to": "staff-pool-demo-01",
+      "delayMinutes": 15,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional staff dispatch and rerouting delay.",
+      "resourceType": "staff"
+    },
+    {
+      "edgeId": "e-staff-03",
+      "from": "staff-pool-demo-01",
+      "to": "hospital-demo-01",
+      "delayMinutes": 5,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional final transit delay to hospital.",
+      "resourceType": "staff"
+    },
+    {
+      "edgeId": "e-med-01",
+      "from": "gauge-demo-01",
+      "to": "supply-route-demo-01",
+      "delayMinutes": 12,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional freight route disruption delay.",
+      "resourceType": "medical_supply"
+    },
+    {
+      "edgeId": "e-med-02",
+      "from": "supply-route-demo-01",
+      "to": "medical-depot-demo-01",
+      "delayMinutes": 20,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional medical depot dispatch bottleneck delay.",
+      "resourceType": "medical_supply"
+    },
+    {
+      "edgeId": "e-med-03",
+      "from": "medical-depot-demo-01",
+      "to": "hospital-demo-01",
+      "delayMinutes": 18,
+      "confidence": 1.0,
+      "minSeverity": "warning",
+      "evidenceStatus": "demonstration",
+      "assumption": "Fictional medical supply delivery transit delay to hospital.",
+      "resourceType": "medical_supply"
+    }
+  ]
+}

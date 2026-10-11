@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { impacts, levelPoints, mapEntities, riskZones, scenarioSteps, type EntityType, type Severity } from './data/scenario'
 import { apiConfigured, getHealth, predictShortage, type ShortageForecast } from './lib/api'
+import { ModelingPage } from './ModelingPage'
 
 const severityLabel: Record<Severity, string> = {
   stable: 'Stable',
@@ -427,7 +428,13 @@ function WaterScene({ level, severity, confidence }: { level: number; severity: 
   )
 }
 
+function getViewFromUrl(): 'home' | 'modeling' {
+  const params = new URLSearchParams(window.location.search)
+  return params.get('view') === 'modeling' ? 'modeling' : 'home'
+}
+
 function App() {
+  const [view, setView] = useState<'home' | 'modeling'>(getViewFromUrl)
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN')
   const [step, setStep] = useState(0)
@@ -441,6 +448,26 @@ function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setView(getViewFromUrl())
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  const navigateTo = (newView: 'home' | 'modeling') => {
+    const url = new URL(window.location.href)
+    if (newView === 'modeling') {
+      url.searchParams.set('view', 'modeling')
+    } else {
+      url.searchParams.delete('view')
+    }
+    window.history.pushState({}, '', url.toString())
+    setView(newView)
+    window.scrollTo(0, 0)
+  }
 
   useEffect(() => {
     if (!apiConfigured) return
@@ -485,6 +512,16 @@ function App() {
     setPlaying((value) => !value)
   }
 
+  if (view === 'modeling') {
+    return (
+      <ModelingPage
+        theme={theme}
+        onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        onNavigateHome={() => navigateTo('home')}
+      />
+    )
+  }
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">Skip to main content</a>
@@ -498,6 +535,16 @@ function App() {
           <a href="#map">Risk map</a>
           <a href="#trace">Trace</a>
           <a href="#advisory">Advisory</a>
+          <a
+            href="?view=modeling"
+            className="nav-modeling-link"
+            onClick={(e) => {
+              e.preventDefault()
+              navigateTo('modeling')
+            }}
+          >
+            Modeling Lab
+          </a>
         </nav>
         <div className="header-actions">
           <button className="text-button" onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')} aria-label="Change language">
@@ -523,6 +570,16 @@ function App() {
             <p className="hero-lede">Ripple turns a river warning into a traceable chain of downstream consequences—so localities, schools, restaurants, hospitals, and water teams get time to act.</p>
             <div className="hero-actions">
               <a className="primary-button" href="#console">Run the scenario <ArrowIcon /></a>
+              <a
+                className="secondary-button"
+                href="?view=modeling"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('modeling')
+                }}
+              >
+                Modeling Lab <ArrowIcon />
+              </a>
               <a className="secondary-button" href="#trace">Follow the signal <ArrowIcon down /></a>
             </div>
             <div className="hero-footnote"><span>DEMO DATA / JUL 2023 REPLAY</span><span>NOT AN OFFICIAL PUBLIC WARNING</span></div>
@@ -734,6 +791,7 @@ function App() {
       <footer>
         <div className="footer-brand"><RippleMark /><strong>Ripple</strong><span>DEPENDENCY-AWARE EARLY WARNING</span></div>
         <div><small>SCENARIO</small><span>Yamuna · July 2023 replay</span></div>
+        <div><small>SANDBOX</small><a href="?view=modeling" onClick={(e) => { e.preventDefault(); navigateTo('modeling'); }}>Modeling Lab ↗</a></div>
         <div><small>STATUS</small><span>Hackathon prototype · Assumption-labelled</span></div>
         <div className="footer-end"><span>© 2026 RIPPLE</span><a href="https://github.com/Raghav7-tech/Ripple" target="_blank" rel="noreferrer">GITHUB ↗</a></div>
       </footer>

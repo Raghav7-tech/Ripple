@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "observationId": "synthetic-multiresource-observation-001",
+  "eventId": "synthetic-multiresource-001",
+  "sourceNodeId": "gauge-demo-01",
+  "observedAt": "2026-10-11T10:00:00+05:30",
+  "receivedAt": "2026-10-11T10:01:00+05:30",
+  "levelM": 206.12,
+  "confidence": 1.0,
+  "mode": "replay",
+  "sourceId": "synthetic-fixture-source"
+}

@@ -52,12 +52,32 @@ Each graph version should include:
 
 - Node and edge IDs are unique.
 - Every edge references existing nodes.
-- Delays are non-negative and bounded.
-- Capacity factors use a documented range.
+- Delays are non-negative integers bounded between 0 and 10,080 minutes.
 - Confidence is between 0 and 1.
 - Each inferred or demonstration edge has an assumption note.
-- Cycles are either forbidden or explicitly supported by the algorithm.
+- Graph must be acyclic (DAG). Cycles are strictly forbidden and rejected at graph load time.
 - Coordinates are real and sourced, or `null`; never use plausible fake coordinates.
+- Edge `resourceType` must be one of `water`, `staff`, or `medical_supply`. Missing `resourceType` defaults to `water` for backward compatibility.
+
+## Resource-aware propagation rules
+
+1. **Independent resource lanes**: At the source node, propagation begins independently for each resource type present on outgoing edges from that node.
+2. **Lane isolation**: Once a lane begins with a specific resource type, traversal is strictly restricted to edges matching that exact resource type. Water paths cannot transition onto staff or medical supply edges, and vice-versa.
+3. **Route selection**:
+   - Earliest arrival: the path with the minimum cumulative `delayMinutes` is selected.
+   - Confidence tie-break: if arrival times are equal, the candidate path with higher multiplied confidence is selected.
+   - Deterministic tie-break: if arrival time and multiplied confidence are identical, the route with the lexicographically smallest sequence of edge IDs is selected. This guarantees determinism irrespective of edge ordering in the JSON input.
+4. **Target impacts**: Impacts are emitted per `(targetNodeId, resourceType)`. A facility reachable by both water and staff receives distinct impact records with distinct IDs, causal paths, arrival times, and action codes.
+5. **Notification filter**: Intermediate nodes marked with `notify: false` are traversed during cascade search but are never emitted as impact targets.
+6. **Multiplied confidence**: Impact confidence is calculated as `observation.confidence × product(edge.confidence)` along the selected path, rounded to 2 decimal places in public outputs.
+
+## Fixture status and operational boundaries
+
+- **Synthetic demonstration inputs**: The multi-resource graph (`multi-resource-demo-graph.json`) and trigger (`multi-resource-trigger.json`) are fully synthetic test fixtures with fictional delays, node identities, and facilities.
+- **Engineered test paths**: The multi-resource test branches (`water`, `staff`, `medical_supply`) are engineered algorithmic test paths to verify propagation mechanics, not empirical evidence that a real Delhi hospital depends on those exact routes.
+- **Historical replay boundary**: The Yamuna 2023 demo graph (`delhi-water-demo-graph.json`) uses illustrative demonstration edges. Historical-looking timestamps in the replay fixture do not convert synthetic graph edges into verified government utility observations.
+- **Rule-based cascade vs physical modeling**: The engine calculates deterministic, rule-based cascade dependencies over user-provided DAGs. It is **not** a hydrodynamic flood simulation, hydraulic pipe model, water-balance model, or official meteorological forecast.
+- **Unsuitable for emergency action**: These outputs are decision-support prototypes and are strictly unsuitable for real-world emergency decisions without reviewed graph data and operator validation.
 
 ## Privacy rules
 

@@ -1,0 +1,321 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "delhi-govt-hospitals-registry",
+  "source": {
+    "sourceId": "src-delhi-hospitals-registry",
+    "title": "Delhi Government Hospitals Directory",
+    "canonicalUrl": "https://health.delhi.gov.in/health/delhi-government-hospitals"
+  },
+  "facilities": [
+    {
+      "facilityId": "hosp-del-01",
+      "name": "Acharya Shree Bhikshu Hospital",
+      "address": "Moti Nagar, New Delhi-110015",
+      "zone": "West Delhi",
+      "contact": "011-25423011",
+      "email": "acharyashreehospital2018@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-02",
+      "name": "Ambedkar Nagar Hospital",
+      "address": "Block-B, Sector-5, Dakshinpuri, New Delhi-110062",
+      "zone": "South Delhi",
+      "contact": "011-26052014",
+      "email": "mdanhospital@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-03",
+      "name": "Aruna Asaf Ali Govt. Hospital",
+      "address": "5-Rajpur Road, Civil Lines, Delhi-110054",
+      "zone": "North Delhi",
+      "contact": "011-23965532",
+      "email": "msaaagh1@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-04",
+      "name": "Attar Sain Jain Hospital",
+      "address": "Community Centre, Keshavpuram Ind. Area, Lawrence Road, Delhi-110035",
+      "zone": "North-West Delhi",
+      "contact": "011-27188342",
+      "email": "asjhospital@rediffmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-05",
+      "name": "Ayurvedic & Unani Tibbia College Hospital",
+      "address": "Ajmal Khan Park, Karol Bagh, New Delhi-110005",
+      "zone": "Central Delhi",
+      "contact": "011-23524180",
+      "email": "msofficetibbia@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-06",
+      "name": "Babu Jagjivan Ram Memorial Hospital",
+      "address": "Jahangirpuri, New Delhi-110033",
+      "zone": "North-West Delhi",
+      "contact": "011-27631810",
+      "email": "msbjrmh.delhi@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-07",
+      "name": "Bhagwan Mahavir Hospital",
+      "address": "H-4/5, Pitampura, Delhi-110034",
+      "zone": "North-West Delhi",
+      "contact": "011-27034535",
+      "email": "msbmh-dhs-delhi@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-08",
+      "name": "B R Sur Homeopathic Hospital",
+      "address": "Nanakpura, Moti Bagh, Delhi-110021",
+      "zone": "South-West Delhi",
+      "contact": "011-24105298",
+      "email": "shmc.delhi@gov.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-09",
+      "name": "Burari Hospital",
+      "address": "Kaushik Enclave, Burari, Delhi-110084",
+      "zone": "North Delhi",
+      "contact": "011-20874505",
+      "email": "burarihospital@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-10",
+      "name": "Deen Dayal Upadhyay Hospital",
+      "address": "Hari Nagar, New Delhi-110064",
+      "zone": "West Delhi",
+      "contact": "011-25494402",
+      "email": "msdduh@yahoo.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-11",
+      "name": "Deep Chand Bandhu Hospital",
+      "address": "Kokiwala Bagh, Phase IV, Ashok Vihar, New Delhi-110052",
+      "zone": "North Delhi",
+      "contact": "011-27305953",
+      "email": "msdcbh.delhi@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-12",
+      "name": "Dr. Baba Saheb Ambedkar Hospital",
+      "address": "Sector 6, Rohini, New Delhi-110085",
+      "zone": "North-West Delhi",
+      "contact": "011-27055585",
+      "email": "msbsah@yahoo.co.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-13",
+      "name": "Dr. Hedgewar Arogya Sansthan",
+      "address": "F-18, Karkardooma, Delhi-110032",
+      "zone": "East Delhi",
+      "contact": "011-20822313",
+      "email": "msdhas2010@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-14",
+      "name": "Dr. N.C. Joshi Memorial Hospital",
+      "address": "Karol Bagh, New Delhi-110005",
+      "zone": "Central Delhi",
+      "contact": "011-23611786",
+      "email": "drncjmh@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-15",
+      "name": "G.B. Pant Hospital (GIPMER)",
+      "address": "Jawahar Lal Nehru Marg, Delhi-110002",
+      "zone": "Central Delhi",
+      "contact": "011-23238109",
+      "email": "dir.gbph@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-16",
+      "name": "Guru Govind Singh Govt. Hospital",
+      "address": "Raghubir Nagar, New Delhi-110027",
+      "zone": "West Delhi",
+      "contact": "011-25984549",
+      "email": "ggsgh@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-17",
+      "name": "Guru Nanak Eye Center",
+      "address": "Maharaja Ranjit Singh Marg, New Delhi-110002",
+      "zone": "Central Delhi",
+      "contact": "011-23236931",
+      "email": "gnecdir@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-18",
+      "name": "Guru Teg Bahadur Hospital (GTBH)",
+      "address": "Dilshad Garden, Delhi-110095",
+      "zone": "Shahdara",
+      "contact": "011-22586262",
+      "email": "msgtbh@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-19",
+      "name": "Indira Gandhi Hospital",
+      "address": "Sector 9, Dwarka, New Delhi-110077",
+      "zone": "South-West Delhi",
+      "contact": "011-20895995",
+      "email": "ighofficedwarka@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-20",
+      "name": "Jag Pravesh Chandra Hospital",
+      "address": "Shastri Park, Delhi-110053",
+      "zone": "North-East Delhi",
+      "contact": "011-22184453",
+      "email": "msjpch2010@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-21",
+      "name": "Lal Bahadur Shastri Hospital",
+      "address": "Khichripur, New Delhi-110091",
+      "zone": "East Delhi",
+      "contact": "011-22774145",
+      "email": "mslbsh.delhi@gov.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-22",
+      "name": "Lok Nayak Hospital (LNJP)",
+      "address": "Jawahar Lal Nehru Marg, Delhi Gate, New Delhi-110002",
+      "zone": "Central Delhi",
+      "contact": "011-23236000",
+      "email": "lnhmsoffice@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-23",
+      "name": "Maharishi Valmiki Hospital",
+      "address": "Pooth Khurd, New Delhi-110039",
+      "zone": "North-West Delhi",
+      "contact": "011-27761521",
+      "email": "msmbh@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-24",
+      "name": "Nehru Homeopathic Medical Hospital",
+      "address": "B-Block, Defence Colony, New Delhi-110024",
+      "zone": "South Delhi",
+      "contact": "011-24334225",
+      "email": "principalnhmc@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-25",
+      "name": "Pt. Madan Mohan Malviya Hospital",
+      "address": "Malviya Nagar, Delhi-110017",
+      "zone": "South Delhi",
+      "contact": "011-20867259",
+      "email": "ms_mnhosp@nic.in",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-26",
+      "name": "Rao Tula Ram Memorial Hospital",
+      "address": "Jaffarpur, New Delhi-110073",
+      "zone": "South-West Delhi",
+      "contact": "011-20895186",
+      "email": "msrtrmh@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-27",
+      "name": "Sardar Vallabh Bhai Patel Hospital",
+      "address": "East Patel Nagar, New Delhi-110008",
+      "zone": "Central Delhi",
+      "contact": "011-20838218",
+      "email": "ms.svbph1@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-28",
+      "name": "Satyawadi Raja Harish Chandra Hospital",
+      "address": "Plot No.30, Sector 7A, Narela, Delhi-110040",
+      "zone": "North Delhi",
+      "contact": "011-20872602",
+      "email": "mssrhch@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-29",
+      "name": "Sanjay Gandhi Memorial Hospital",
+      "address": "S-Block, Mangolpuri, Delhi-110083",
+      "zone": "North-West Delhi",
+      "contact": "011-20873051",
+      "email": "mssgmh@rediffmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-30",
+      "name": "Shri Dada Dev Matri Avum Shishu Chikitsalaya",
+      "address": "Dabri, New Delhi-110045",
+      "zone": "South-West Delhi",
+      "contact": "011-25395536",
+      "email": "msddmsc@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    },
+    {
+      "facilityId": "hosp-del-31",
+      "name": "Sushruta Trauma Centre",
+      "address": "9, Metcalf Road, Civil Lines, Delhi-110054",
+      "zone": "North Delhi",
+      "contact": "011-23957000",
+      "email": "mssushruta@gmail.com",
+      "sourceId": "src-delhi-hospitals-registry",
+      "sourceLocator": "Delhi Govt Health Directory"
+    }
+  ]
+}

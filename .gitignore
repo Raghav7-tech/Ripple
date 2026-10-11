@@ -45,3 +45,4 @@ tmp/
 # Local data; committed samples belong in data/samples
 data/raw/
 data/private/
+data/sources/raw/

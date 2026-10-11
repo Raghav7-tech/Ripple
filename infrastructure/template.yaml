@@ -186,6 +186,13 @@ Resources:
     Properties:
       CodeUri: ../backend
       Handler: functions.cascade.app.handler
+      Events:
+        Simulate:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /modeling/simulate
+            Method: POST
 
   AdvisoryFunction:
     Type: AWS::Serverless::Function

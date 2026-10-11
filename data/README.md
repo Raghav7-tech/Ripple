@@ -9,6 +9,6 @@ data/
 └── sources/   provenance and operational-use register
 ```
 
-Every included value is demonstration data. `operationalUseAllowed` is false in the source register. A real deployment must replace these fixtures with reviewed data and preserve the source ID, observed time, received time, and graph version in every run.
+Every included value is demonstration data. `operationalUseAllowed` is false in the source register. Fixtures include single-resource water replay (`yamuna-2023-replay.json`, `delhi-water-demo-graph.json`) and multi-resource cascade fixtures (`multi-resource-demo-graph.json`, `multi-resource-trigger.json`) covering `water`, `staff`, and `medical_supply`. All new multi-resource branches and trigger events are synthetic demonstration inputs. A real deployment must replace these fixtures with reviewed data and preserve the source ID, observed time, received time, and graph version in every run.
 
 Do not commit private, scraped-without-permission, or personally identifiable data. Detailed rules are in [`docs/DATA_AND_ASSUMPTIONS.md`](../docs/DATA_AND_ASSUMPTIONS.md).

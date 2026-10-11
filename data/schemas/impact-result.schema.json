@@ -36,6 +36,10 @@
     "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
     "path": { "type": "array", "minItems": 1, "items": { "type": "object" } },
     "assumptions": { "type": "array", "items": { "type": "string" } },
-    "actionCode": { "type": "string", "minLength": 1 }
+    "actionCode": { "type": "string", "minLength": 1 },
+    "resourceType": { "$ref": "#/$defs/resourceType" }
+  },
+  "$defs": {
+    "resourceType": { "enum": ["water", "staff", "medical_supply"] }
   }
 }
