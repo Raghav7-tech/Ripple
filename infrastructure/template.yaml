@@ -18,7 +18,7 @@ Parameters:
   BedrockModelId:
     Type: String
     Default: amazon.nova-micro-v1:0
-    Description: Bedrock model or inference-profile ID used only for controlled advisory rewriting
+    Description: Regional Bedrock foundation-model ID used only for controlled advisory rewriting
 
 Globals:
   Function:

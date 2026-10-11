@@ -28,11 +28,13 @@ flowchart TB
       EB[EventBridge Scheduler]
       ING[Ingestion Lambda]
       CAS[Cascade Lambda]
+      ML[Shortage artifact inference]
       ADV[Advisory Lambda]
     end
 
     subgraph Storage
       DDB[(DynamoDB)]
+      TDS[(S3 training data and artifacts)]
       DLQ[SQS DLQ]
     end
 
@@ -52,6 +54,8 @@ flowchart TB
     ING --> DDB
     ING --> CAS
     CAS <--> DDB
+    CAS --> ML
+    TDS -. versioned offline inputs .-> ML
     CAS --> ADV
     ADV --> BR --> GR --> SNS
     ADV --> GR
@@ -66,6 +70,7 @@ flowchart TB
 |---|---|---|
 | Ingestion | Source validation, normalisation, deduplication | Impact prediction |
 | Cascade engine | Graph propagation, path, severity, confidence | Natural-language invention |
+| Shortage predictor | Versioned tabular inference and contributing factors | Claiming production readiness from synthetic data |
 | Advisory composer | Locked fact object and templates | Changing calculated facts |
 | Bedrock integration | Optional simplification or translation | Trigger or severity decisions |
 | API | Authorised reads and controlled actions | Direct database logic in clients |
@@ -92,6 +97,7 @@ For the small MVP, one or a few purpose-built tables are acceptable. Do not forc
 - Persist calculation input and graph version with every run.
 - Fail closed when schema version is unknown.
 - Keep deterministic templates available when Bedrock is unavailable.
+- Keep tabular shortage inference independent of Bedrock and load only versioned artifacts.
 - Expose stale-data and partial-result states to the UI.
 
 ## Authentication and authorisation

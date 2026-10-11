@@ -38,6 +38,7 @@ Thumbs.db
 
 # Generated documents and local QA
 *.pdf
+*.inspect.ndjson
 docs/.rendered/
 .tmp/
 tmp/

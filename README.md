@@ -135,9 +135,18 @@ The replay regression produces three explainable facility impacts at 38, 72, and
 - **Rule-based cascade vs physical modeling**: The engine calculates deterministic, rule-based cascade dependencies over user-provided DAGs, **not** a hydrodynamic flood simulation, water-balance model, or official meteorological forecast.
 - **Operational decision boundary**: Results are decision-support prototypes and are unsuitable for real-world emergency decisions without reviewed graph data and operator validation.
 
-## Shortage prediction
+## Shortage prediction and controlled Bedrock use
 
-Ripple now has a `ShortagePredictor` interface and an explainable pre-ML baseline using reserve hours, supply, demand, river rise, upstream disruption probability, criticality, and prediction horizon. It makes UI/API integration testable today, but returns `productionReady: false` because no real labelled facility dataset has been supplied. The training target, leakage controls, event-based split, calibration checks, and safety gates are documented in [ml/MODEL_CARD.md](ml/MODEL_CARD.md).
+Ripple now includes both the hand-authored baseline and `shortage-logistic-synthetic-v1`, a dependency-free logistic model artifact trained on 2,160 clearly labelled synthetic rows across locality, school, college, restaurant, and healthcare entities. The split is grouped by simulated disruption event to prevent row leakage. Its synthetic holdout metrics are useful only for pipeline verification, so every response still returns `productionReady: false` until reviewed real-world labels are collected and the model is recalibrated.
+
+Amazon Bedrock is optional and is used only to rewrite or translate engine-produced advisories. The target, ETA, confidence, and other numeric facts are locked and validated; any model error or changed fact triggers the deterministic bilingual fallback. See [ml/MODEL_CARD.md](ml/MODEL_CARD.md) and [data/README.md](data/README.md).
+
+Rebuild the development dataset and artifact with:
+
+```bash
+python ml/scripts/generate_dataset.py
+python ml/scripts/train_model.py
+```
 
 ### Implemented frontend experience
 

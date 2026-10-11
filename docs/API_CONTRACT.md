@@ -229,7 +229,13 @@ The server must reject approval when the run is stale, incomplete, mismatched, o
 }
 ```
 
-The current response uses `explainable-baseline-v1` and includes `productionReady: false`. A future trained model must implement this same contract and pass the evaluation gates in [`ml/MODEL_CARD.md`](../ml/MODEL_CARD.md).
+Local development defaults to `explainable-baseline-v1`; the SAM deployment selects the versioned `shortage-logistic-synthetic-v1` artifact. Both include `productionReady: false`. Any future operational model must preserve this contract and pass the evaluation gates in [`ml/MODEL_CARD.md`](../ml/MODEL_CARD.md).
+
+## Compose a guarded advisory
+
+`POST /admin/advisories/compose`
+
+This authenticated route accepts an engine-generated locked-fact object. When Bedrock is enabled, it may simplify or translate only those facts. The server validates target name, ETA, confidence, and every numeric claim. On disabled access, runtime failure, malformed JSON, or fact drift, the response uses deterministic English/Hindi templates and reports `generationMode: "deterministic"` with a safe fallback reason.
 
 ## Stateless modeling simulation
 

@@ -164,7 +164,7 @@ for (const col of ["A", "B", "C", "D", "F", "G", "H", "X", "Y", "Z", "AA"]) data
 
 summary.getRange("A1:H19").format.font = { name: font, size: 10, color: text };
 summary.getRange("A1:H19").format.verticalAlignment = "center";
-summary.getRange("A:A").format.columnWidth = 12;
+summary.getRange("A:A").format.columnWidth = 25;
 summary.getRange("B:B").format.columnWidth = 25;
 summary.getRange("C:C").format.columnWidth = 3;
 for (const col of ["D", "E", "F", "G", "H"]) summary.getRange(`${col}:${col}`).format.columnWidth = 18;
