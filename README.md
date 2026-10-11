@@ -112,11 +112,28 @@ The deployed frontend is available at [ripple-topaz.vercel.app](https://ripple-t
 Python 3.14 is used by the SAM template. The core has no third-party runtime dependency.
 
 ```bash
+# Run automated tests
 python -m unittest discover -s backend/tests -t backend -v
+
+# Run historical Yamuna replay walkthrough
 python -m backend.ripple.replay data/samples/yamuna-2023-replay.json data/samples/delhi-water-demo-graph.json
+
+# Run capacity benchmark (default 1,000 nodes, out-degree 5, 5 repeats)
+python backend/benchmarks/benchmark_cascade.py
+
+# Run large-scale stress benchmark (10,000 nodes, out-degree 5, 3 repeats)
+python backend/benchmarks/benchmark_cascade.py --nodes 10000 --out-degree 5 --repeats 3
 ```
 
 The replay regression produces three explainable facility impacts at 38, 72, and 125 minutes. All route delays and confidence weights are explicitly marked as demonstration assumptions.
+
+### Simulation boundary and synthetic fixtures
+
+- **Synthetic test fixtures**: All new multi-resource graph and trigger fixtures (`data/samples/multi-resource-demo-graph.json`, `data/samples/multi-resource-trigger.json`) are synthetic demonstration inputs.
+- **Engineered test branches**: The multi-resource test branches (`water`, `staff`, `medical_supply`) are engineered algorithmic test paths to verify independent resource-lane propagation, not evidence that a real Delhi hospital depends on those exact routes.
+- **Historical replay data**: The Yamuna 2023 demo graph contains illustrative demonstration edges; its historical-looking timestamps do not make every supplied graph edge an official observation.
+- **Rule-based cascade vs physical modeling**: The engine calculates deterministic, rule-based cascade dependencies over user-provided DAGs, **not** a hydrodynamic flood simulation, water-balance model, or official meteorological forecast.
+- **Operational decision boundary**: Results are decision-support prototypes and are unsuitable for real-world emergency decisions without reviewed graph data and operator validation.
 
 ## Shortage prediction
 

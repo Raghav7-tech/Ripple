@@ -72,6 +72,137 @@ class HandlerTests(unittest.TestCase):
         self.assertEqual(preview["statusCode"], 200)
         self.assertFalse(json.loads(preview["body"])["delivered"])
 
+    def test_cascade_http_simulation_valid(self) -> None:
+        replay = fixture("data/samples/yamuna-2023-replay.json")
+        event = {
+            "rawPath": "/modeling/simulate",
+            "headers": {"x-correlation-id": "test-corr-123"},
+            "body": json.dumps(
+                {
+                    "runId": "run-http-1",
+                    "graph": fixture("data/samples/delhi-water-demo-graph.json"),
+                    "observation": replay["observations"][-1],
+                }
+            ),
+        }
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 200)
+        body = json.loads(res["body"])
+        self.assertEqual(body["schemaVersion"], "1.0")
+        self.assertEqual(body["runId"], "run-http-1")
+        self.assertEqual(body["severity"], "critical")
+        self.assertEqual(len(body["impacts"]), 3)
+        self.assertEqual(body["correlationId"], "test-corr-123")
+        self.assertIn("engineCalculationMs", body)
+        self.assertIsInstance(body["engineCalculationMs"], (int, float))
+
+    def test_cascade_http_simulation_invalid_body(self) -> None:
+        event = {"rawPath": "/modeling/simulate", "body": "{not valid json"}
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "MALFORMED_JSON")
+
+    def test_cascade_http_simulation_missing_fields(self) -> None:
+        event = {"rawPath": "/modeling/simulate", "body": json.dumps({"runId": "r1"})}
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "INVALID_CASCADE_INPUT")
+
+    def test_cascade_http_simulation_invalid_resource(self) -> None:
+        graph = fixture("data/samples/delhi-water-demo-graph.json")
+        graph_copy = json.loads(json.dumps(graph))
+        graph_copy["edges"][0]["resourceType"] = "uranium"
+        replay = fixture("data/samples/yamuna-2023-replay.json")
+        event = {
+            "rawPath": "/modeling/simulate",
+            "body": json.dumps(
+                {
+                    "runId": "run-bad-res",
+                    "graph": graph_copy,
+                    "observation": replay["observations"][-1],
+                }
+            ),
+        }
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "INVALID_CASCADE_INPUT")
+
+    def test_cascade_http_simulation_node_cap(self) -> None:
+        graph = fixture("data/samples/delhi-water-demo-graph.json")
+        graph_copy = json.loads(json.dumps(graph))
+        base_node = graph_copy["nodes"][0]
+        graph_copy["nodes"] = [
+            {**base_node, "nodeId": f"node-{i}", "name": f"Node {i}"} for i in range(501)
+        ]
+        replay = fixture("data/samples/yamuna-2023-replay.json")
+        event = {
+            "rawPath": "/modeling/simulate",
+            "body": json.dumps(
+                {
+                    "runId": "run-cap",
+                    "graph": graph_copy,
+                    "observation": replay["observations"][-1],
+                }
+            ),
+        }
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "GRAPH_TOO_LARGE")
+
+    def test_cascade_http_simulation_edge_cap(self) -> None:
+        graph = fixture("data/samples/delhi-water-demo-graph.json")
+        graph_copy = json.loads(json.dumps(graph))
+        base_edge = graph_copy["edges"][0]
+        graph_copy["edges"] = [
+            {**base_edge, "edgeId": f"edge-{i}"} for i in range(2501)
+        ]
+        replay = fixture("data/samples/yamuna-2023-replay.json")
+        event = {
+            "rawPath": "/modeling/simulate",
+            "body": json.dumps(
+                {
+                    "runId": "run-cap",
+                    "graph": graph_copy,
+                    "observation": replay["observations"][-1],
+                }
+            ),
+        }
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "GRAPH_TOO_LARGE")
+
+    def test_cascade_http_simulation_payload_cap(self) -> None:
+        event = {
+            "rawPath": "/modeling/simulate",
+            "body": "x" * (1024 * 1024 + 10),
+        }
+        res = cascade_handler(event, None)
+        self.assertEqual(res["statusCode"], 400)
+        body = json.loads(res["body"])
+        self.assertEqual(body["error"]["code"], "PAYLOAD_TOO_LARGE")
+
+    def test_cascade_http_simulation_deterministic(self) -> None:
+        replay = fixture("data/samples/yamuna-2023-replay.json")
+        payload = json.dumps(
+            {
+                "runId": "run-det",
+                "graph": fixture("data/samples/delhi-water-demo-graph.json"),
+                "observation": replay["observations"][-1],
+            }
+        )
+        res1 = cascade_handler({"rawPath": "/modeling/simulate", "body": payload}, None)
+        res2 = cascade_handler({"rawPath": "/modeling/simulate", "body": payload}, None)
+        b1 = json.loads(res1["body"])
+        b2 = json.loads(res2["body"])
+        self.assertEqual(b1["runId"], b2["runId"])
+        self.assertEqual(b1["severity"], b2["severity"])
+        self.assertEqual(b1["impacts"], b2["impacts"])
+
 
 if __name__ == "__main__":
     unittest.main()

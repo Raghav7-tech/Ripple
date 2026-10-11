@@ -91,7 +91,8 @@
       "confidence": 0.98,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative eight-minute signal-to-intake delay."
+      "assumption": "Illustrative eight-minute signal-to-intake delay.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-wazirabad-north",
@@ -101,7 +102,8 @@
       "confidence": 0.95,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative treatment-to-zone propagation delay."
+      "assumption": "Illustrative treatment-to-zone propagation delay.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-north-hospital",
@@ -111,7 +113,8 @@
       "confidence": 0.94,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative distribution delay to the hospital."
+      "assumption": "Illustrative distribution delay to the hospital.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-gauge-chandrawal",
@@ -121,7 +124,8 @@
       "confidence": 0.96,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative fourteen-minute signal-to-intake delay."
+      "assumption": "Illustrative fourteen-minute signal-to-intake delay.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-chandrawal-central",
@@ -131,7 +135,8 @@
       "confidence": 0.92,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative treatment-to-zone propagation delay."
+      "assumption": "Illustrative treatment-to-zone propagation delay.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-central-clinic",
@@ -141,7 +146,8 @@
       "confidence": 0.92,
       "minSeverity": "warning",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative distribution delay to the clinic."
+      "assumption": "Illustrative distribution delay to the clinic.",
+      "resourceType": "water"
     },
     {
       "edgeId": "e-north-shelter",
@@ -151,7 +157,8 @@
       "confidence": 0.85,
       "minSeverity": "critical",
       "evidenceStatus": "demonstration",
-      "assumption": "Illustrative delayed supply impact at the shelter."
+      "assumption": "Illustrative delayed supply impact at the shelter.",
+      "resourceType": "water"
     }
   ]
 }

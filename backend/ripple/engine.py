@@ -5,7 +5,16 @@ import heapq
 from dataclasses import dataclass
 from datetime import timedelta
 
-from .models import DependencyGraph, Edge, ImpactResult, Observation, PathStep, Severity, ValidationError
+from .models import (
+    DependencyGraph,
+    Edge,
+    ImpactResult,
+    Observation,
+    PathStep,
+    ResourceType,
+    Severity,
+    ValidationError,
+)
 
 
 @dataclass(frozen=True)
@@ -13,6 +22,8 @@ class _Route:
     arrival_minutes: int
     confidence: float
     path: tuple[Edge, ...]
+    resource_type: ResourceType
+    edge_ids: tuple[str, ...] = ()
 
 
 class CascadeEngine:
@@ -20,9 +31,14 @@ class CascadeEngine:
 
     def __init__(self, graph: DependencyGraph):
         self.graph = graph
-        self._adjacency: dict[str, list[Edge]] = {node_id: [] for node_id in graph.nodes}
+        self._adjacency: dict[tuple[str, ResourceType], list[Edge]] = {}
+        self._outgoing_resources: dict[str, set[ResourceType]] = {node_id: set() for node_id in graph.nodes}
         for edge in graph.edges:
-            self._adjacency[edge.source].append(edge)
+            key = (edge.source, edge.resource_type)
+            if key not in self._adjacency:
+                self._adjacency[key] = []
+            self._adjacency[key].append(edge)
+            self._outgoing_resources[edge.source].add(edge.resource_type)
         for edges in self._adjacency.values():
             edges.sort(key=lambda edge: (edge.delay_minutes, edge.edge_id))
 
@@ -33,37 +49,60 @@ class CascadeEngine:
         if source_severity is Severity.STABLE:
             return []
 
-        routes: dict[str, _Route] = {
-            observation.source_node_id: _Route(0, observation.confidence, tuple())
-        }
-        queue: list[tuple[int, str]] = [(0, observation.source_node_id)]
+        active_resource_types = sorted(
+            self._outgoing_resources.get(observation.source_node_id, set()),
+            key=lambda r: r.value,
+        )
 
-        while queue:
-            arrival, node_id = heapq.heappop(queue)
-            current = routes[node_id]
-            if arrival != current.arrival_minutes:
-                continue
-            for edge in self._adjacency[node_id]:
-                if source_severity.rank < edge.min_severity.rank:
+        all_routes: list[tuple[str, ResourceType, _Route]] = []
+        for resource_type in active_resource_types:
+            routes: dict[str, _Route] = {
+                observation.source_node_id: _Route(
+                    arrival_minutes=0,
+                    confidence=observation.confidence,
+                    path=tuple(),
+                    resource_type=resource_type,
+                    edge_ids=tuple(),
+                )
+            }
+            queue: list[tuple[int, float, tuple[str, ...], str]] = [
+                (0, -observation.confidence, (), observation.source_node_id)
+            ]
+
+            while queue:
+                arrival, neg_conf, edge_ids, node_id = heapq.heappop(queue)
+                current = routes[node_id]
+                if (arrival, -neg_conf, edge_ids) != (current.arrival_minutes, current.confidence, current.edge_ids):
                     continue
-                candidate = _Route(
-                    arrival_minutes=arrival + edge.delay_minutes,
-                    confidence=current.confidence * edge.confidence,
-                    path=current.path + (edge,),
-                )
-                existing = routes.get(edge.target)
-                is_better = existing is None or candidate.arrival_minutes < existing.arrival_minutes
-                same_time_higher_confidence = (
-                    existing is not None
-                    and candidate.arrival_minutes == existing.arrival_minutes
-                    and candidate.confidence > existing.confidence
-                )
-                if is_better or same_time_higher_confidence:
-                    routes[edge.target] = candidate
-                    heapq.heappush(queue, (candidate.arrival_minutes, edge.target))
+                for edge in self._adjacency.get((node_id, resource_type), []):
+                    if source_severity.rank < edge.min_severity.rank:
+                        continue
+                    candidate = _Route(
+                        arrival_minutes=arrival + edge.delay_minutes,
+                        confidence=current.confidence * edge.confidence,
+                        path=current.path + (edge,),
+                        resource_type=resource_type,
+                        edge_ids=current.edge_ids + (edge.edge_id,),
+                    )
+                    existing = routes.get(edge.target)
+                    if self._is_better(candidate, existing):
+                        routes[edge.target] = candidate
+                        heapq.heappush(
+                            queue,
+                            (
+                                candidate.arrival_minutes,
+                                -candidate.confidence,
+                                candidate.edge_ids,
+                                edge.target,
+                            ),
+                        )
+
+            for node_id, route in routes.items():
+                if route.path:
+                    all_routes.append((node_id, resource_type, route))
 
         impacts: list[ImpactResult] = []
-        for node_id, route in routes.items():
+        for node_id, resource_type, route in all_routes:
             node = self.graph.nodes[node_id]
             if not node.notify or not route.path:
                 continue
@@ -76,7 +115,7 @@ class CascadeEngine:
             }
             if node.assumption:
                 assumptions.add(node.assumption)
-            impact_key = f"{run_id}|{node_id}|{observation.observed_at.isoformat()}"
+            impact_key = f"{run_id}|{node_id}|{resource_type.value}|{observation.observed_at.isoformat()}"
             impact_id = "impact-" + hashlib.sha256(impact_key.encode("utf-8")).hexdigest()[:12]
             impacts.append(
                 ImpactResult(
@@ -88,6 +127,7 @@ class CascadeEngine:
                     eta_minutes=route.arrival_minutes,
                     severity=severity,
                     confidence=round(route.confidence, 2),
+                    resource_type=resource_type,
                     path=tuple(
                         PathStep(
                             edge_id=edge.edge_id,
@@ -97,6 +137,7 @@ class CascadeEngine:
                             confidence=edge.confidence,
                             evidence_status=edge.evidence_status,
                             assumption=edge.assumption,
+                            resource_type=edge.resource_type,
                         )
                         for edge in route.path
                     ),
@@ -104,7 +145,17 @@ class CascadeEngine:
                     action_code=self._action_code(node.node_type, severity),
                 )
             )
-        return sorted(impacts, key=lambda item: (item.eta_minutes, item.target_node_id))
+        return sorted(impacts, key=lambda item: (item.eta_minutes, item.target_node_id, item.resource_type.value))
+
+    @staticmethod
+    def _is_better(candidate: _Route, existing: _Route | None) -> bool:
+        if existing is None:
+            return True
+        if candidate.arrival_minutes != existing.arrival_minutes:
+            return candidate.arrival_minutes < existing.arrival_minutes
+        if candidate.confidence != existing.confidence:
+            return candidate.confidence > existing.confidence
+        return candidate.edge_ids < existing.edge_ids
 
     @staticmethod
     def _action_code(node_type: str, severity: Severity) -> str:
@@ -113,3 +164,4 @@ class CascadeEngine:
         if node_type == "shelter":
             return "INSPECT_POTABLE_WATER_INVENTORY"
         return "MONITOR_AND_CONFIRM_STORAGE"
+

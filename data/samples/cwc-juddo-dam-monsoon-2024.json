@@ -1,0 +1,381 @@
+{
+  "schemaVersion": "1.0",
+  "eventId": "juddo-dam-monsoon-2024",
+  "name": "CWC Upper Yamuna Hydrology Replay (Juddo Dam, 2024)",
+  "description": "Empirical manual hourly river water level telemetry from CWC's Juddo Dam station in the Upper Yamuna Basin (Uttarakhand). Discloses geographic location in Dehradun; thresholds are configured model assumptions.",
+  "primarySources": [
+    {
+      "sourceId": "src-cwc-yamuna-hourly",
+      "title": "River Water Level CWC Yamuna Basin (2021-2025) Manual Hourly",
+      "citation": "Central Water Commission / NWIC Dataset dd3b9bba-6ba2-4954-93cf-e3ee84b5d9af"
+    }
+  ],
+  "stationMetadata": {
+    "stationId": "gauge-cwc-juddo-dam",
+    "name": "Juddo Dam",
+    "river": "Yamuna",
+    "basin": "Yamuna Basin",
+    "state": "Uttarakhand",
+    "district": "Dehradun",
+    "latitude": 30.51666667,
+    "longitude": 77.88333333,
+    "zeroGaugeRlM": 0.0,
+    "warningThresholdM": null,
+    "dangerThresholdM": null,
+    "hflM": null
+  },
+  "graph": {
+    "schemaVersion": "1.0",
+    "graphVersion": "cwc-juddo-dam-hydrology-v1",
+    "createdAt": "2026-10-11T12:00:00+05:30",
+    "approvedAt": null,
+    "thresholdsM": {
+      "watch": 628.0,
+      "warning": 628.5,
+      "critical": 629.0
+    },
+    "nodes": [
+      {
+        "nodeId": "gauge-cwc-juddo-dam",
+        "name": "CWC Juddo Dam Gauge (Dehradun, Uttarakhand)",
+        "type": "gauge",
+        "notify": false,
+        "severityCap": "critical",
+        "evidenceStatus": "verified",
+        "assumption": "Real CWC manual hourly station located in Upper Yamuna Basin (Dehradun, Uttarakhand, Lat 30.53, Lon 77.92)."
+      },
+      {
+        "nodeId": "reservoir-juddo-dam",
+        "name": "Juddo Dam Reservoir Pool",
+        "type": "reservoir",
+        "notify": false,
+        "severityCap": "critical",
+        "evidenceStatus": "inferred",
+        "assumption": "Immediate reservoir storage pool subject to upper catchment inflow surges."
+      },
+      {
+        "nodeId": "hydro-station-juddo",
+        "name": "Juddo Hydroelectric Intake Control",
+        "type": "control-intake",
+        "notify": true,
+        "severityCap": "critical",
+        "evidenceStatus": "inferred",
+        "assumption": "Hydraulic intake gate with spillway protocol under high river discharge."
+      }
+    ],
+    "edges": [
+      {
+        "edgeId": "e-juddo-gauge-res",
+        "from": "gauge-cwc-juddo-dam",
+        "to": "reservoir-juddo-dam",
+        "delayMinutes": 10,
+        "confidence": 0.99,
+        "minSeverity": "watch",
+        "evidenceStatus": "inferred",
+        "assumption": "Gauge measurement to reservoir stage propagation.",
+        "resourceType": "water"
+      },
+      {
+        "edgeId": "e-juddo-res-intake",
+        "from": "reservoir-juddo-dam",
+        "to": "hydro-station-juddo",
+        "delayMinutes": 20,
+        "confidence": 0.96,
+        "minSeverity": "warning",
+        "evidenceStatus": "inferred",
+        "assumption": "Spillway gate actuation protocol.",
+        "resourceType": "water"
+      }
+    ]
+  },
+  "observations": [
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011200",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T12:00:00+05:30",
+      "receivedAt": "2024-06-01T12:00:15+05:30",
+      "levelM": 628.04,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011300",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T13:00:00+05:30",
+      "receivedAt": "2024-06-01T13:00:15+05:30",
+      "levelM": 628.12,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011400",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T14:00:00+05:30",
+      "receivedAt": "2024-06-01T14:00:15+05:30",
+      "levelM": 628.21,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011500",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T15:00:00+05:30",
+      "receivedAt": "2024-06-01T15:00:15+05:30",
+      "levelM": 628.27,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011600",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T16:00:00+05:30",
+      "receivedAt": "2024-06-01T16:00:15+05:30",
+      "levelM": 628.29,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011700",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T17:00:00+05:30",
+      "receivedAt": "2024-06-01T17:00:15+05:30",
+      "levelM": 628.31,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011800",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T18:00:00+05:30",
+      "receivedAt": "2024-06-01T18:00:15+05:30",
+      "levelM": 628.34,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406011900",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T19:00:00+05:30",
+      "receivedAt": "2024-06-01T19:00:15+05:30",
+      "levelM": 628.34,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406012000",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T20:00:00+05:30",
+      "receivedAt": "2024-06-01T20:00:15+05:30",
+      "levelM": 628.44,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406012100",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T21:00:00+05:30",
+      "receivedAt": "2024-06-01T21:00:15+05:30",
+      "levelM": 628.46,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406012200",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T22:00:00+05:30",
+      "receivedAt": "2024-06-01T22:00:15+05:30",
+      "levelM": 628.47,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406012300",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-01T23:00:00+05:30",
+      "receivedAt": "2024-06-01T23:00:15+05:30",
+      "levelM": 628.25,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020000",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T00:00:00+05:30",
+      "receivedAt": "2024-06-02T00:00:15+05:30",
+      "levelM": 627.72,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020100",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T01:00:00+05:30",
+      "receivedAt": "2024-06-02T01:00:15+05:30",
+      "levelM": 627.34,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020200",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T02:00:00+05:30",
+      "receivedAt": "2024-06-02T02:00:15+05:30",
+      "levelM": 627.13,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020300",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T03:00:00+05:30",
+      "receivedAt": "2024-06-02T03:00:15+05:30",
+      "levelM": 627.19,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020400",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T04:00:00+05:30",
+      "receivedAt": "2024-06-02T04:00:15+05:30",
+      "levelM": 627.21,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020500",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T05:00:00+05:30",
+      "receivedAt": "2024-06-02T05:00:15+05:30",
+      "levelM": 627.26,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020600",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T06:00:00+05:30",
+      "receivedAt": "2024-06-02T06:00:15+05:30",
+      "levelM": 627.28,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020700",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T07:00:00+05:30",
+      "receivedAt": "2024-06-02T07:00:15+05:30",
+      "levelM": 627.32,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020800",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T08:00:00+05:30",
+      "receivedAt": "2024-06-02T08:00:15+05:30",
+      "levelM": 627.35,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406020900",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T09:00:00+05:30",
+      "receivedAt": "2024-06-02T09:00:15+05:30",
+      "levelM": 627.42,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406021000",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T10:00:00+05:30",
+      "receivedAt": "2024-06-02T10:00:15+05:30",
+      "levelM": 627.47,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    },
+    {
+      "schemaVersion": "1.0",
+      "observationId": "cwc-juddo-dam-202406021100",
+      "eventId": "juddo-dam-monsoon-2024",
+      "sourceNodeId": "gauge-cwc-juddo-dam",
+      "observedAt": "2024-06-02T11:00:00+05:30",
+      "receivedAt": "2024-06-02T11:00:15+05:30",
+      "levelM": 627.5,
+      "confidence": 1.0,
+      "mode": "replay",
+      "sourceId": "src-cwc-yamuna-hourly"
+    }
+  ]
+}

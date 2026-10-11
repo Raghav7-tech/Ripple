@@ -1,19 +1,19 @@
 # Project status
 
-Last verified: 10 October 2026
+Last verified: 11 October 2026
 
 ## Current state
 
 | Area | Status | Evidence |
 |---|---|---|
 | Problem definition | Documented | README and project guide |
-| Demo scenario | Documented | Yamuna 2023 replay plan |
+| Demo scenario | Documented | Yamuna 2023 replay plan and synthetic multi-resource scenario |
 | Architecture | Implemented as source, not deployed | Architecture docs and `infrastructure/template.yaml` |
-| Data contracts | Implemented | JSON Schemas, runtime validators, samples, and source register |
-| Backend implementation | Core slice implemented | Deterministic engine, replay, advisory, forecast baseline, persistence and Lambda handlers |
+| Data contracts | Implemented | JSON Schemas (1.0), resourceType support, runtime validators, samples, and source register |
+| Backend implementation | Core slice implemented | Deterministic multi-resource cascade engine, simulation-capacity benchmark, replay, advisory, forecast baseline, persistence and Lambda handlers |
 | Frontend implementation | Interactive prototype implemented | React application in `frontend/`; production build verified locally |
 | Infrastructure as code | Implemented, not deployment-verified | AWS SAM template defines API, Lambda, S3, DynamoDB, SNS, SQS, and disabled schedule |
-| Automated tests | Passing locally | 16 backend tests plus frontend production build |
+| Automated tests | Passing locally | 29 backend tests (unit, replay regression, multi-resource, determinism, models) |
 | AWS deployment | Not verified | No deployment evidence or URL present |
 | Demo video | Not verified | No video link present |
 

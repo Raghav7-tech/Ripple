@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "djb-wtp-production-reports",
+  "description": "Verified WTP daily production capacities and measured outputs from official DJB Summer Bulletins.",
+  "records": [
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-wazirabad",
+      "wtpName": "Wazirabad Water Treatment Plant",
+      "capacityMgd": 131.0,
+      "actualMgd": 96.0,
+      "shortfallMgd": -35.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 3",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-chandrawal",
+      "wtpName": "Chandrawal Water Treatment Plant",
+      "capacityMgd": 94.0,
+      "actualMgd": 76.0,
+      "shortfallMgd": -18.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 5",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-haiderpur",
+      "wtpName": "Haiderpur Water Treatment Plant",
+      "capacityMgd": 216.0,
+      "actualMgd": 211.0,
+      "shortfallMgd": -5.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 1",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-sonia-vihar",
+      "wtpName": "Sonia Vihar Water Treatment Plant",
+      "capacityMgd": 140.0,
+      "actualMgd": 142.0,
+      "shortfallMgd": 2.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 2",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-bhagirathi",
+      "wtpName": "Bhagirathi Water Treatment Plant",
+      "capacityMgd": 110.0,
+      "actualMgd": 110.0,
+      "shortfallMgd": 0.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 4",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-07-26",
+      "wtpId": "wtp-okhla",
+      "wtpName": "Okhla Water Treatment Plant",
+      "capacityMgd": 20.0,
+      "actualMgd": 20.0,
+      "shortfallMgd": 0.0,
+      "sourceId": "src-djb-bulletin-20240726",
+      "sourceLocator": "Summer Bulletin 26.07.2024, Table 1, Row 8",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-05-04",
+      "wtpId": "wtp-wazirabad",
+      "wtpName": "Wazirabad Water Treatment Plant",
+      "capacityMgd": 131.0,
+      "actualMgd": 134.7,
+      "shortfallMgd": 3.7,
+      "sourceId": "src-djb-bulletin-20240505",
+      "sourceLocator": "Summer Bulletin 05.05.2024, Page 1, Row 3",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-05-04",
+      "wtpId": "wtp-chandrawal",
+      "wtpName": "Chandrawal Water Treatment Plant",
+      "capacityMgd": 94.0,
+      "actualMgd": 99.76,
+      "shortfallMgd": 5.76,
+      "sourceId": "src-djb-bulletin-20240505",
+      "sourceLocator": "Summer Bulletin 05.05.2024, Page 1, Row 5",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-05-04",
+      "wtpId": "wtp-haiderpur",
+      "wtpName": "Haiderpur Water Treatment Plant",
+      "capacityMgd": 216.0,
+      "actualMgd": 241.67,
+      "shortfallMgd": 25.67,
+      "sourceId": "src-djb-bulletin-20240505",
+      "sourceLocator": "Summer Bulletin 05.05.2024, Page 1, Row 1",
+      "evidenceClassification": "observed"
+    },
+    {
+      "recordDate": "2024-05-04",
+      "wtpId": "wtp-sonia-vihar",
+      "wtpName": "Sonia Vihar Water Treatment Plant",
+      "capacityMgd": 140.0,
+      "actualMgd": 142.95,
+      "shortfallMgd": 2.95,
+      "sourceId": "src-djb-bulletin-20240505",
+      "sourceLocator": "Summer Bulletin 05.05.2024, Page 1, Row 2",
+      "evidenceClassification": "observed"
+    }
+  ]
+}
