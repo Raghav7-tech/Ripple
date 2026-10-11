@@ -48,6 +48,14 @@ class HandlerTests(unittest.TestCase):
         self.assertEqual(result["modelVersion"], "explainable-baseline-v1")
         self.assertFalse(result["productionReady"])
 
+    def test_forecast_http_handler_uses_api_gateway_response(self) -> None:
+        result = forecast_handler(
+            {"requestContext": {"http": {}}, "body": json.dumps({"features": fixture("data/samples/shortage-forecast-request.json")})},
+            None,
+        )
+        self.assertEqual(result["statusCode"], 200)
+        self.assertEqual(json.loads(result["body"])["modelVersion"], "explainable-baseline-v1")
+
     def test_alert_handler_requires_explicit_approval_and_defaults_to_preview(self) -> None:
         replay = replay_handler(
             {

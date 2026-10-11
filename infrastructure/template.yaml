@@ -11,6 +11,14 @@ Parameters:
     Type: String
     Default: 'false'
     AllowedValues: ['true', 'false']
+  EnableBedrockAdvisory:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+  BedrockModelId:
+    Type: String
+    Default: amazon.nova-micro-v1:0
+    Description: Bedrock model or inference-profile ID used only for controlled advisory rewriting
 
 Globals:
   Function:
@@ -25,6 +33,11 @@ Globals:
         APP_MODE: replay
         TABLE_NAME: !Ref RippleTable
         REPLAY_BUCKET: !Ref ReplayBucket
+        TRAINING_DATA_BUCKET: !Ref TrainingDataBucket
+        SHORTAGE_MODEL_MODE: artifact
+        SHORTAGE_MODEL_PATH: ripple/model_artifacts/shortage_logistic_v1.json
+        ENABLE_BEDROCK_ADVISORY: !Ref EnableBedrockAdvisory
+        BEDROCK_MODEL_ID: !Ref BedrockModelId
         POWERTOOLS_SERVICE_NAME: ripple
     LoggingConfig:
       LogFormat: JSON
@@ -88,6 +101,28 @@ Resources:
         IgnorePublicAcls: true
         BlockPublicPolicy: true
         RestrictPublicBuckets: true
+
+  TrainingDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: ArchiveNoncurrentDatasetVersions
+            Status: Enabled
+            NoncurrentVersionTransitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: 30
 
   RippleTable:
     Type: AWS::DynamoDB::Table
@@ -199,6 +234,23 @@ Resources:
     Properties:
       CodeUri: ../backend
       Handler: functions.advisory.app.handler
+      Timeout: 30
+      Policies:
+        - Statement:
+            - Sid: InvokeConfiguredBedrockModel
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}'
+      Events:
+        ComposeAdvisory:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RippleApi
+            Path: /admin/advisories/compose
+            Method: POST
+            Auth:
+              Authorizer: RippleJwtAuthorizer
 
   ForecastFunction:
     Type: AWS::Serverless::Function
@@ -241,6 +293,8 @@ Outputs:
     Value: !Sub 'https://${RippleApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${EnvironmentName}'
   ReplayBucketName:
     Value: !Ref ReplayBucket
+  TrainingDataBucketName:
+    Value: !Ref TrainingDataBucket
   TableName:
     Value: !Ref RippleTable
   AlertTopicArn:

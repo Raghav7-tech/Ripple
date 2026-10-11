@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import math
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Protocol
 
 from .models import ValidationError, _confidence, _number, _required
@@ -129,4 +131,105 @@ class ExplainableBaselinePredictor:
             top_factors=top_factors,
             model_version=self.model_version,
             production_ready=False,
+        )
+
+
+class ArtifactLogisticPredictor:
+    """Dependency-free inference adapter for a versioned logistic model artifact.
+
+    Training happens outside Lambda. The deployed function only loads reviewed
+    coefficients and applies the same feature transforms recorded in the
+    artifact, keeping cold starts small and predictions reproducible.
+    """
+
+    FEATURE_LABELS = {
+        "reserveHours": "low reserve",
+        "supplyDemandGapRatio": "supply-demand gap",
+        "riverRiseMPerHour": "rising river",
+        "upstreamDisruptionProbability": "upstream disruption",
+        "criticality": "entity criticality",
+        "horizonHours": "forecast horizon",
+    }
+
+    def __init__(self, artifact: dict[str, Any]) -> None:
+        if artifact.get("schemaVersion") != "1.0" or artifact.get("modelType") != "logistic_regression":
+            raise ValidationError("forecast artifact schema or model type is unsupported")
+        feature_order = artifact.get("featureOrder")
+        means = artifact.get("means")
+        scales = artifact.get("scales")
+        weights = artifact.get("weights")
+        if not isinstance(feature_order, list) or not feature_order:
+            raise ValidationError("forecast artifact featureOrder must be a non-empty array")
+        if not all(isinstance(item, str) for item in feature_order):
+            raise ValidationError("forecast artifact featureOrder values must be strings")
+        for label, values in (("means", means), ("scales", scales), ("weights", weights)):
+            if not isinstance(values, list) or len(values) != len(feature_order):
+                raise ValidationError(f"forecast artifact {label} must match featureOrder")
+            if any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in values):
+                raise ValidationError(f"forecast artifact {label} must contain numbers")
+        if any(float(scale) <= 0 for scale in scales):
+            raise ValidationError("forecast artifact scales must be positive")
+        self.feature_order = tuple(feature_order)
+        self.means = tuple(float(value) for value in means)
+        self.scales = tuple(float(value) for value in scales)
+        self.weights = tuple(float(value) for value in weights)
+        self.bias = _number(artifact.get("bias"), "forecast artifact.bias")
+        self.model_version = str(_required(artifact, "modelVersion", "forecast artifact"))
+        self.production_ready = bool(artifact.get("productionReady", False))
+
+    @classmethod
+    def from_path(cls, path: str | Path) -> "ArtifactLogisticPredictor":
+        with Path(path).open(encoding="utf-8") as handle:
+            artifact = json.load(handle)
+        if not isinstance(artifact, dict):
+            raise ValidationError("forecast artifact must contain a JSON object")
+        return cls(artifact)
+
+    @staticmethod
+    def _raw_features(features: ShortageFeatures) -> dict[str, float]:
+        gap_ratio = max(
+            0.0,
+            (features.expected_demand_m3h - features.expected_supply_m3h)
+            / features.expected_demand_m3h,
+        )
+        return {
+            "reserveHours": features.reserve_hours,
+            "supplyDemandGapRatio": gap_ratio,
+            "riverRiseMPerHour": features.river_rise_m_per_hour,
+            "upstreamDisruptionProbability": features.upstream_disruption_probability,
+            "criticality": features.criticality,
+            "horizonHours": float(features.horizon_hours),
+        }
+
+    def predict(self, features: ShortageFeatures) -> ShortageForecast:
+        raw = self._raw_features(features)
+        try:
+            standardized = [
+                (raw[name] - mean) / scale
+                for name, mean, scale in zip(self.feature_order, self.means, self.scales, strict=True)
+            ]
+        except KeyError as exc:
+            raise ValidationError(f"forecast artifact requests unknown feature: {exc.args[0]}") from exc
+        contributions = [weight * value for weight, value in zip(self.weights, standardized, strict=True)]
+        logit = self.bias + sum(contributions)
+        probability = round(1.0 / (1.0 + math.exp(-max(-30.0, min(30.0, logit)))), 3)
+        risk_band = "critical" if probability >= 0.8 else "high" if probability >= 0.6 else "moderate" if probability >= 0.35 else "low"
+
+        gap_ratio = raw["supplyDemandGapRatio"]
+        hours_to_shortage = round(features.reserve_hours / gap_ratio, 1) if gap_ratio > 0 else None
+        ranked = sorted(
+            zip(self.feature_order, contributions, strict=True),
+            key=lambda item: abs(item[1]),
+            reverse=True,
+        )
+        top_factors = tuple(self.FEATURE_LABELS.get(name, name) for name, _ in ranked[:3])
+        return ShortageForecast(
+            facility_id=features.facility_id,
+            shortage_probability=probability,
+            estimated_hours_to_shortage=hours_to_shortage,
+            risk_band=risk_band,
+            horizon_hours=features.horizon_hours,
+            top_factors=top_factors,
+            model_version=self.model_version,
+            production_ready=self.production_ready,
         )

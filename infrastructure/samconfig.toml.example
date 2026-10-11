@@ -1,0 +1,10 @@
+version = 0.1
+
+[demo.deploy.parameters]
+stack_name = "ripple-demo"
+resolve_s3 = true
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+fail_on_empty_changeset = false
+region = "ap-south-1"
+parameter_overrides = "EnvironmentName=demo EnableAlertDelivery=false EnableBedrockAdvisory=true BedrockModelId=amazon.nova-micro-v1:0"

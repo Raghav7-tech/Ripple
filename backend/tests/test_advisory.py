@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from ripple.advisory import compose_advisory, validate_generated_advisory
+from ripple.bedrock_advisory import compose_bedrock_advisory
 from ripple.models import ImpactResult
 from ripple.replay import run_replay
 from tests.support import fixture
@@ -32,6 +33,52 @@ class AdvisoryTests(unittest.TestCase):
         candidate["lockedFacts"] = dict(candidate["lockedFacts"])
         candidate["lockedFacts"]["etaMinutes"] = 5
         self.assertFalse(validate_generated_advisory(candidate, advisory.locked_facts))
+
+    def test_bedrock_adapter_accepts_locked_json(self) -> None:
+        fallback = compose_advisory(self.impact, "en")
+
+        class FakeClient:
+            def converse(self, **_kwargs):
+                candidate = {
+                    "title": fallback.title,
+                    "body": fallback.body,
+                    "action": fallback.action,
+                    "lockedFacts": fallback.locked_facts,
+                }
+                return {"output": {"message": {"content": [{"text": __import__("json").dumps(candidate)}]}}}
+
+        advisory, reason = compose_bedrock_advisory(
+            self.impact,
+            "en",
+            model_id="test-model",
+            client=FakeClient(),
+        )
+        self.assertIsNone(reason)
+        self.assertEqual(advisory.generator, "bedrock-converse:test-model")
+        self.assertEqual(advisory.locked_facts, fallback.locked_facts)
+
+    def test_bedrock_adapter_falls_back_when_facts_change(self) -> None:
+        fallback = compose_advisory(self.impact, "en")
+
+        class FakeClient:
+            def converse(self, **_kwargs):
+                candidate = {
+                    "title": fallback.title,
+                    "body": fallback.body.replace("38", "5"),
+                    "action": fallback.action,
+                    "lockedFacts": {**fallback.locked_facts, "etaMinutes": 5},
+                }
+                return {"output": {"message": {"content": [{"text": __import__("json").dumps(candidate)}]}}}
+
+        advisory, reason = compose_bedrock_advisory(
+            self.impact,
+            "en",
+            model_id="test-model",
+            client=FakeClient(),
+        )
+        self.assertIsNotNone(reason)
+        self.assertEqual(advisory.generator, "deterministic-template-v1")
+        self.assertEqual(advisory.locked_facts["etaMinutes"], 38)
 
 
 if __name__ == "__main__":

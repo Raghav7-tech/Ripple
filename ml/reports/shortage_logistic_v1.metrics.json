@@ -1,0 +1,47 @@
+{
+  "datasetId": "ripple-synthetic-shortage-v1",
+  "rowCount": 2160,
+  "eventSplit": "grouped-by-event-70-15-15",
+  "syntheticShare": 1.0,
+  "metrics": {
+    "train": {
+      "rows": 1500,
+      "positives": 810,
+      "precision": 0.9431,
+      "recall": 0.9,
+      "f1": 0.921,
+      "brierScore": 0.0678,
+      "areaUnderPrecisionRecall": 0.9845,
+      "truePositives": 729,
+      "falsePositives": 44,
+      "falseNegatives": 81,
+      "trueNegatives": 646
+    },
+    "validation": {
+      "rows": 300,
+      "positives": 113,
+      "precision": 0.9485,
+      "recall": 0.8142,
+      "f1": 0.8762,
+      "brierScore": 0.0716,
+      "areaUnderPrecisionRecall": 0.9708,
+      "truePositives": 92,
+      "falsePositives": 5,
+      "falseNegatives": 21,
+      "trueNegatives": 182
+    },
+    "test": {
+      "rows": 360,
+      "positives": 196,
+      "precision": 0.9235,
+      "recall": 0.9235,
+      "f1": 0.9235,
+      "brierScore": 0.069,
+      "areaUnderPrecisionRecall": 0.9834,
+      "truePositives": 181,
+      "falsePositives": 15,
+      "falseNegatives": 15,
+      "trueNegatives": 149
+    }
+  }
+}

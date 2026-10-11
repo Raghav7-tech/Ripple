@@ -89,6 +89,39 @@
       "evidenceStatus": "demonstration",
       "operationalUseAllowed": false,
       "notes": "Retained for synthetic unit testing and demonstration only. Must never be confused with verified historical data."
+    },
+    {
+      "sourceId": "src-gnctd-munak-2016",
+      "label": "DJB starts three plants; water supply from Haryana awaited",
+      "publisher": "Directorate of Information and Publicity, Government of NCT of Delhi",
+      "canonicalUrl": "https://publicity.delhi.gov.in/publicity/djb-starts-three-plants-water-supply-haryana-awaited-22th-february-2016",
+      "license": "Official Government Release",
+      "format": "html",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Plant-state event anchor; no entity-level reserve or shortage timestamps."
+    },
+    {
+      "sourceId": "src-gnctd-ammonia-2016",
+      "label": "Pollutant in Yamuna affecting water supply",
+      "publisher": "Directorate of Information and Publicity, Government of NCT of Delhi",
+      "canonicalUrl": "https://publicity.delhi.gov.in/publicity/urgent-chief-secretary-writes-chief-secretay-haryana-take-necessary-steps-about",
+      "license": "Official Government Release",
+      "format": "html",
+      "evidenceStatus": "verified",
+      "operationalUseAllowed": false,
+      "notes": "Confirms ammonia-related production impact at Wazirabad and Chandrawal; no machine-readable entity labels."
+    },
+    {
+      "sourceId": "ripple-synthetic-v1",
+      "label": "Ripple hydraulic-reserve synthetic generator v1",
+      "publisher": "Ripple contributors",
+      "canonicalUrl": "https://github.com/Raghav7-tech/Ripple",
+      "license": "Repository Demonstration Data",
+      "format": "csv",
+      "evidenceStatus": "demonstration",
+      "operationalUseAllowed": false,
+      "notes": "Entity demand, supply, reserve and shortage labels are generated for pipeline development only."
     }
   ]
 }

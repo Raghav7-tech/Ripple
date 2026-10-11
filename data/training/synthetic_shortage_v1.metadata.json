@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "datasetId": "ripple-synthetic-shortage-v1",
+  "createdAt": "2026-10-11T05:37:55.380565+00:00",
+  "generator": "ml/scripts/generate_dataset.py",
+  "seed": 42,
+  "rowCount": 2160,
+  "eventCount": 36,
+  "positiveCount": 1119,
+  "positiveRate": 0.5181,
+  "syntheticShare": 1.0,
+  "operationalUseAllowed": false,
+  "limitations": [
+    "All entity-level features and labels are synthetic.",
+    "Verified event anchors are stored separately and are not treated as facility labels.",
+    "Use only for pipeline development, tests, and hackathon demonstration."
+  ]
+}
